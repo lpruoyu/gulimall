@@ -38,6 +38,10 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>Greenwich.SR3</version>
+                <!--
+                    Maven是单继承的，对于一个子工程来说只能有一个父工程
+                    如果我们还想导入其它依赖，就要使用scope为import来导入它们，并且它的type必须为pom
+                -->
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
