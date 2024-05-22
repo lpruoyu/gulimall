@@ -1,13 +1,27 @@
 package com.atguigu.gulimall.ware;
 
-import org.junit.jupiter.api.Test;
+import com.atguigu.gulimall.ware.service.WareInfoService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
-class GulimallWareApplicationTests {
+public class GulimallWareApplicationTests {
+
+    @Autowired
+    WareInfoService service;
 
     @Test
-    void contextLoads() {
+    public  void contextLoads() {
+//        WareInfoEntity entity = new WareInfoEntity();
+//        entity.setAddress("address111");
+//        entity.setId(1L);
+//        entity.setAreacode("areacode");
+//        entity.setName("水水水水");
+//        service.save(entity);
     }
 
 }
