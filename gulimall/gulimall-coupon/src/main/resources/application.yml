@@ -4,6 +4,10 @@ spring:
     password: root
     url: jdbc:mysql://192.168.56.10:3306/gulimall_sms?useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
 mybatis-plus:
   global-config:

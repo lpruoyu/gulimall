@@ -26,6 +26,16 @@ public class CouponController {
     /**
      * 列表
      */
+    @RequestMapping("/couponInfo")
+    public R couponInfo(){
+        CouponEntity couponEntity = new CouponEntity();
+        couponEntity.setCouponName("满100返300");
+        return R.ok().put("couponInfo", Arrays.asList(couponEntity));
+    }
+
+    /**
+     * 列表
+     */
     @RequestMapping("/list")
     // @RequiresPermissions("coupon:coupon:list")
     public R list(@RequestParam Map<String, Object> params){
