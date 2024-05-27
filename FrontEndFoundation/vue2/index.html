@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1> {{hello()}}</h1>
+        <input type="text" v-model="num">
+        <button v-on:click="num++">点赞</button>
+        <button v-on:click="cancle">取消点赞</button>
+        <h1> {{date}}</h1>
+        <h1> {{name}} ,非常帅，有{{num}}个人为他点赞</h1>
+    </div>
+    <script>
+        //1、vue声明式渲染
+        /*let vm = */
+
+        new Vue({
+            el: "#app",//绑定元素
+            data: {  //封装数据
+                name: "张三",
+                num: 1,
+                date: new Date()
+            },
+            methods: {  //封装方法
+                cancle() {
+                    this.num--;
+                    this.date = new Date();
+                },
+                hello() {
+                    return "hello dear user!"
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
