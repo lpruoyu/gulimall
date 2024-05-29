@@ -1,20 +1,15 @@
 package com.atguigu.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-// import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.atguigu.gulimall.product.entity.CategoryEntity;
-import com.atguigu.gulimall.product.service.CategoryService;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.R;
+import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 商品三级分类
@@ -28,6 +23,16 @@ import com.atguigu.common.utils.R;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
+
+    /**
+     * 查出所有分类以及子分类，以树形结构组装起来
+     */
+    @RequestMapping("/list/tree")
+    // @RequiresPermissions("product:category:listTree")
+    public R listTree(){
+        List<CategoryEntity> listTree = categoryService.listTree();
+        return R.ok().put("listTree", listTree);
+    }
 
     /**
      * 列表

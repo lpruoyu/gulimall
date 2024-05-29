@@ -7,8 +7,7 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-      config:
-        server-addr: 127.0.0.1:8848
-        namespace: 52102b61-d205-44ee-bf6a-0249dc55dd73
-        group: dev
-        file-extension: yml
+# nacos中不同命名空间的服务不能直接调用，可以使用其他方法
+#        namespace: 52102b61-d205-44ee-bf6a-0249dc55dd73
+#        group: dev
+#        file-extension: yml
