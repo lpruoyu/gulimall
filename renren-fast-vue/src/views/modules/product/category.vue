@@ -20,6 +20,9 @@
           >
             Append
           </el-button>
+          <el-button type="text" size="mini" @click="() => edit(data)">
+            Edit
+          </el-button>
           <el-button
             v-if="node.childNodes.length == 0"
             type="text"
@@ -31,15 +34,24 @@
         </span>
       </span>
     </el-tree>
-    <el-dialog title="添加菜单" :visible.sync="dialogFormVisible" width="30%">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
       <el-form :model="category">
         <el-form-item label="分类名称">
           <el-input v-model="category.name" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="分类图标" v-if="dialogType == 'edit'">
+          <el-input v-model="category.icon" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="分类单位" v-if="dialogType == 'edit'">
+          <el-input
+            v-model="category.productUnit"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitCategory">确 定</el-button>
+        <el-button type="primary" @click="submitData">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -49,7 +61,19 @@
 export default {
   data() {
     return {
-      category: { name: "", parentCid: 0, catLevel: 0, showStatus: 1, sort: 0 },
+      dialogType: "", // "append"/"edit"
+      title: "",
+      category: {
+        name: "",
+        parentCid: 0,
+        catLevel: 0,
+        showStatus: 1,
+        sort: 0,
+        catId: 0 /* 修改时需要用到catId */,
+        icon: "",
+        productUnit: "",
+        productCount: 0,
+      },
       dialogFormVisible: false,
       menus: [],
       defaultProps: {
@@ -72,15 +96,92 @@ export default {
         this.menus = data.data;
       });
     },
+    submitData() {
+      if (this.dialogType == "edit") {
+        this.editCategory();
+      }
+
+      if (this.dialogType == "append") {
+        this.appendCategory();
+      }
+    },
+
+    edit(data) {
+      console.log("edit:", data);
+      this.title = "修改分类";
+      this.dialogType = "edit";
+      this.dialogFormVisible = true;
+
+      // 回显数据应该从数据库中查找最新数据
+      this.$http({
+        url: this.$http.adornUrl(`/product/category/info/${data.catId}`),
+        method: "get",
+      }).then(({ data }) => {
+        console.log("要回显的数据：", data);
+        this.category.name = data.data.name;
+        this.category.catId = data.data.catId;
+        this.category.icon = data.data.icon;
+        this.category.productUnit = data.data.productUnit;
+        this.category.parentCid = data.data.parentCid;
+      });
+    },
+    // 修改三级分类
+    editCategory() {
+      console.log("editCategory:", this.category);
+      this.dialogFormVisible = false;
+      if (this.category.name == "" || this.category.name === "") {
+        this.$message.error("菜单修改失败");
+        return;
+      }
+      var { name, catId, icon, productUnit } = this.category;
+      // var data = {name, catId, icon, productUnit}
+      // 不想更新的数据不往出发！
+      this.$http({
+        url: this.$http.adornUrl("/product/category/update"),
+        method: "post",
+        // data: this.$http.adornData(data, false),
+        data: this.$http.adornData({ name, catId, icon, productUnit }, false),
+      }).then(({ data }) => {
+        this.$message({
+          message: "菜单修改成功",
+          type: "success",
+        });
+        this.dialogFormVisible = false;
+        // 刷新出新的菜单
+        this.getMenus();
+        // 设置需要默认展开的菜单
+        this.expandedKey = [this.category.parentCid];
+      });
+    },
+
     append(data) {
       console.log("append:", data);
+      // 重置this.category
+      this.category = {
+        name: "",
+        parentCid: 0,
+        catLevel: 0,
+        showStatus: 1,
+        sort: 0,
+        catId: null, // catId是自增的
+        icon: "",
+        productUnit: "",
+        productCount: 0,
+      };
+
+      this.dialogType = "append";
+      this.title = "添加分类";
       this.dialogFormVisible = true;
       this.category.parentCid = data.catId;
       this.category.catLevel = data.catLevel * 1 + 1; // *1是为了防止是字符串
     },
-    submitCategory() {
-      // console.log(this.category);
-      this.dialogFormVisible = false;
+    // 添加三级分类
+    appendCategory() {
+      console.log("appendCategory:",this.category);
+      if (this.category.name == "" || this.category.name === "") {
+        this.$message.error("菜单添加失败");
+        return;
+      }
       this.$http({
         url: this.$http.adornUrl("/product/category/save"),
         method: "post",
@@ -90,18 +191,11 @@ export default {
           message: "菜单保存成功",
           type: "success",
         });
+        this.dialogFormVisible = false;
         // 刷新出新的菜单
         this.getMenus();
         // 设置需要默认展开的菜单
         this.expandedKey = [this.category.parentCid];
-        // 初始化this.category
-        this.category = {
-          name: "",
-          parentCid: 0,
-          catLevel: 0,
-          showStatus: 1,
-          sort: 0,
-        };
       });
     },
     remove(node, data) {

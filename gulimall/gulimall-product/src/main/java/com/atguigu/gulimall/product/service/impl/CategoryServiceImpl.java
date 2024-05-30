@@ -56,7 +56,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     // 递归查找所有子分类
     private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {
         List<CategoryEntity> collect = all.stream()
-                .filter(entity -> entity.getParentCid() == root.getCatId())
+//                .filter(entity -> entity.getParentCid() == root.getCatId()) // 这样写是有bug的
+                .filter(entity -> entity.getParentCid().equals(root.getCatId())) // 应该使用equals比较
                 .map(entity -> {
                     entity.setChildren(getChildren(entity, all));
                     return entity;
