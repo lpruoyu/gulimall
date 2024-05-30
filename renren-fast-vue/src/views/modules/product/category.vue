@@ -1,84 +1,62 @@
 <template>
   <div>
     <el-tree
-      :data="data"
+      :data="menus"
       :props="defaultProps"
       @node-click="handleNodeClick"
-    ></el-tree>
+      :expand-on-click-node="false"
+      show-checkbox
+      node-key="catId"
+      :default-expanded-keys="expandedKey"
+    >
+      <span class="custom-tree-node" slot-scope="{ node, data }">
+        <span>{{ node.label }}</span>
+        <span>
+          <el-button
+            v-if="node.level <= 2"
+            type="text"
+            size="mini"
+            @click="() => append(data)"
+          >
+            Append
+          </el-button>
+          <el-button
+            v-if="node.childNodes.length == 0"
+            type="text"
+            size="mini"
+            @click="() => remove(node, data)"
+          >
+            Delete
+          </el-button>
+        </span>
+      </span>
+    </el-tree>
+    <el-dialog title="添加菜单" :visible.sync="dialogFormVisible" width="30%">
+      <el-form :model="category">
+        <el-form-item label="分类名称">
+          <el-input v-model="category.name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitCategory">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-//这里可以导入其他文件（比如：组件，工具 js，第三方插件 js，json文件，图片文件等等）
-//例如：import 《组件名称》 from '《组件路径》';
-
 export default {
-  //import 引入的组件需要注入到对象中才能使用
-  components: {},
-  props: {},
   data() {
     return {
-      data: [
-        {
-          label: "一级 1",
-          children: [
-            {
-              label: "二级 1-1",
-              children: [
-                {
-                  label: "三级 1-1-1",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          label: "一级 2",
-          children: [
-            {
-              label: "二级 2-1",
-              children: [
-                {
-                  label: "三级 2-1-1",
-                },
-              ],
-            },
-            {
-              label: "二级 2-2",
-              children: [
-                {
-                  label: "三级 2-2-1",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          label: "一级 3",
-          children: [
-            {
-              label: "二级 3-1",
-              children: [
-                {
-                  label: "三级 3-1-1",
-                },
-              ],
-            },
-            {
-              label: "二级 3-2",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      category: { name: "", parentCid: 0, catLevel: 0, showStatus: 1, sort: 0 },
+      dialogFormVisible: false,
+      menus: [],
       defaultProps: {
         children: "children",
-        label: "label",
+        label: "name",
       },
+      expandedKey: [],
     };
   },
   methods: {
@@ -86,33 +64,91 @@ export default {
       console.log(data);
     },
     getMenus() {
-        this.$http({
-          url: this.$http.adornUrl('http://localhost:12000/product/category/list/tree'),
-          method: 'get'
-        }).then(({data}) => {
-          console.log(data);
+      this.$http({
+        url: this.$http.adornUrl("/product/category/list/tree"),
+        method: "get",
+      }).then(({ data }) => {
+        // console.log(data.data);
+        this.menus = data.data;
+      });
+    },
+    append(data) {
+      console.log("append:", data);
+      this.dialogFormVisible = true;
+      this.category.parentCid = data.catId;
+      this.category.catLevel = data.catLevel * 1 + 1; // *1是为了防止是字符串
+    },
+    submitCategory() {
+      // console.log(this.category);
+      this.dialogFormVisible = false;
+      this.$http({
+        url: this.$http.adornUrl("/product/category/save"),
+        method: "post",
+        data: this.$http.adornData(this.category, false),
+      }).then(({ data }) => {
+        this.$message({
+          message: "菜单保存成功",
+          type: "success",
+        });
+        // 刷新出新的菜单
+        this.getMenus();
+        // 设置需要默认展开的菜单
+        this.expandedKey = [this.category.parentCid];
+        // 初始化this.category
+        this.category = {
+          name: "",
+          parentCid: 0,
+          catLevel: 0,
+          showStatus: 1,
+          sort: 0,
+        };
+      });
+    },
+    remove(node, data) {
+      console.log("remove", node, data);
+
+      this.$confirm(`是否删除当前菜单【${data.name}】?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          let ids = [data.catId];
+          this.$http({
+            url: this.$http.adornUrl(`/product/category/delete`),
+            method: "post",
+            data: this.$http.adornData(ids, false),
+          })
+            .then(({ data }) => {
+              if (data.code == 0) {
+                this.$message({
+                  message: "菜单删除成功",
+                  type: "success",
+                });
+                // 刷新出新的菜单
+                this.getMenus();
+                // 设置需要默认展开的菜单
+                this.expandedKey = [node.parent.data.catId];
+              } else {
+                this.$message.error("菜单删除失败");
+              }
+            })
+            .catch(() => {
+              this.$message.error("菜单删除失败");
+            });
         })
-    }
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "用户取消删除",
+          });
+        });
+    },
   },
-  //计算属性 类似于 data 概念
-  computed: {},
-  //监控 data 中的数据变化
-  watch: {},
-  //生命周期 - 创建完成（可以访问当前 this 实例）
   created() {
     this.getMenus();
   },
-  //生命周期 - 挂载完成（可以访问 DOM 元素）
-  mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {}, //如果页面有 keep-alive 缓存功能，这个函数会触发
 };
 </script>
-<style lang='scss' scoped>
-//@import url(); 引入公共 css 类
+<style>
 </style>

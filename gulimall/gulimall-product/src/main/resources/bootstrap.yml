@@ -1,23 +1,50 @@
 spring:
   application:
     name: gulimall-product
-  datasource:
-    username: root
-    password: root
-    url: jdbc:mysql://192.168.56.10:3306/gulimall_pms?useSSL=false
-    driver-class-name: com.mysql.jdbc.Driver
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
       config:
         server-addr: 127.0.0.1:8848
+        namespace: be4402d0-89a6-483b-9a8e-507bbda69589
+        group: dev
+        file-extension: yml
+server:
+  port: 12000
+
 mybatis-plus:
   global-config:
     db-config:
-      id-type: auto # 主键自增
-#   mapper-locations: classpath:/mapper/**/*.xml
-                    # classpath代表只扫描自己的
-  mapper-locations: classpath*:/mapper/**/*.xml
-server:
-  port: 12000
+#      logic-delete-field: deleted # 全局逻辑删除字段名
+      logic-delete-value: 1 # 逻辑已删除值【全局】
+      logic-not-delete-value: 0 # 逻辑未删除值【全局】
+      id-type: auto
+#spring:
+#  application:
+#    name: gulimall-product
+#  datasource:
+#    username: root
+#    password: root
+#    url: jdbc:mysql://192.168.56.10:3306/gulimall_pms?useSSL=false
+#    driver-class-name: com.mysql.jdbc.Driver
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
+#      config:
+#        server-addr: 127.0.0.1:8848
+#        namespace: be4402d0-89a6-483b-9a8e-507bbda69589
+#        group: dev
+#mybatis-plus:
+#  global-config:
+#    db-config:
+#      id-type: auto # 主键自增
+##   mapper-locations: classpath:/mapper/**/*.xml
+#                    # classpath代表只扫描自己的
+#  mapper-locations: classpath*:/mapper/**/*.xml
+#server:
+logging:
+  level:
+    com.atguigu.gulimall: debug
+#  port: 12000
