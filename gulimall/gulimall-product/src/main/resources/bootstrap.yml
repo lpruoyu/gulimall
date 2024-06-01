@@ -16,10 +16,12 @@ server:
 mybatis-plus:
   global-config:
     db-config:
-#      logic-delete-field: deleted # 全局逻辑删除字段名
-      logic-delete-value: 1 # 逻辑已删除值【全局】
-      logic-not-delete-value: 0 # 逻辑未删除值【全局】
+#      logic-delete-field: show_status # 全局逻辑删除字段名
+      logic-delete-value: 0 # 逻辑已删除值【全局】
+      logic-not-delete-value: 1 # 逻辑未删除值【全局】
       id-type: auto
+
+
 #spring:
 #  application:
 #    name: gulimall-product

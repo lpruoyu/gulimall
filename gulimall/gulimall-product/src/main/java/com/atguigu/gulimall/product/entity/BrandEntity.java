@@ -2,10 +2,9 @@ package com.atguigu.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
-import lombok.Data;
 
 /**
  * 品牌
@@ -39,6 +38,9 @@ public class BrandEntity implements Serializable {
 	/**
 	 * 显示状态[0-不显示；1-显示]
 	 */
+//	@TableLogic(value = "1", delval = "0")
+//	@TableLogic
+//	这里使用逻辑删除的话，使用MybatisPlus更新该字段会有bug
 	private Integer showStatus;
 	/**
 	 * 检索首字母

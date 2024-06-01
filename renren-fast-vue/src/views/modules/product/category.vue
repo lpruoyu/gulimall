@@ -1,6 +1,8 @@
 <template>
   <div>
+    <el-button type="danger" @click="batchDelete">批量删除</el-button>
     <el-tree
+      ref="tree"
       :data="menus"
       :props="defaultProps"
       @node-click="handleNodeClick"
@@ -34,7 +36,12 @@
         </span>
       </span>
     </el-tree>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
+    <el-dialog
+      :title="title"
+      :visible.sync="dialogFormVisible"
+      width="30%"
+      :close-on-click-modal="false"
+    >
       <el-form :model="category">
         <el-form-item label="分类名称">
           <el-input v-model="category.name" autocomplete="off"></el-input>
@@ -86,6 +93,43 @@ export default {
   methods: {
     handleNodeClick(data) {
       console.log(data);
+    },
+    batchDelete() {
+      let checkedKeys = this.$refs.tree.getCheckedKeys();
+      console.log("checkedKeys", checkedKeys);
+      this.$confirm(`是否批量删除菜单?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$http({
+            url: this.$http.adornUrl(`/product/category/delete`),
+            method: "post",
+            data: this.$http.adornData(checkedKeys, false),
+          })
+            .then(({ data }) => {
+              if (data.code == 0) {
+                this.$message({
+                  message: "菜单删除成功",
+                  type: "success",
+                });
+                // 刷新出新的菜单
+                this.getMenus();
+              } else {
+                this.$message.error("菜单删除失败");
+              }
+            })
+            .catch(() => {
+              this.$message.error("菜单删除失败");
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "用户取消删除",
+          });
+        });
     },
     getMenus() {
       this.$http({
@@ -177,7 +221,7 @@ export default {
     },
     // 添加三级分类
     appendCategory() {
-      console.log("appendCategory:",this.category);
+      console.log("appendCategory:", this.category);
       if (this.category.name == "" || this.category.name === "") {
         this.$message.error("菜单添加失败");
         return;
