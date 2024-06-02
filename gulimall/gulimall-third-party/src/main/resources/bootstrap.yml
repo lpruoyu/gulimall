@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gulimall-third-party
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: 3a5be8bd-42c8-4ca3-8e46-ad829a33911b
+        group: dev
+        file-extension: yml
+server:
+  port: 30000
+#  servlet:
+#    context-path: /thirdparty

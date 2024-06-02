@@ -26,7 +26,7 @@
 <!--        <module>gulimall-cart</module>-->
 <!--        <module>gulimall-search</module>-->
 <!--        <module>gulimall-seckill</module>-->
-<!--        <module>gulimall-third-party</module>-->
+        <module>gulimall-third-party</module>
         <module>renren-fast</module>
     </modules>
 

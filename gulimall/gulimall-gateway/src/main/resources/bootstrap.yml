@@ -16,3 +16,44 @@ spring:
 #        namespace: 52102b61-d205-44ee-bf6a-0249dc55dd73
 #        group: dev
 #        file-extension: yml
+    gateway:
+      routes:
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+          #需要把精确的路由放到上面【/api/product/**比/api/**更精确】
+
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/**
+          # 规则：前端项目都带上/api/前缀
+          # 默认是这样子转发的 http://localhost:88/api/captcha.jpg  ==》 http://renrenfast/api/captcha.jpg
+          #renrenfast 代表 renren-fast的url+port 也就是：localhost:8080
+          # 希望这样子转发 http://renrenfast/renren-fast/captcha.jpg
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+
+#spring:
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: test_route
+#          uri: https://www.baidu.com
+#          predicates:
+#            - Query=url,baidu
+#        - id: qq_route
+#          uri: https://www.qq.com
+#          predicates:
+#            - Query=url,qq
+
