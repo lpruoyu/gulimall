@@ -81,15 +81,19 @@ export default {
       console.log("updateBrandStatus", newVal);
       let { brandId, showStatus } = newVal;
       this.$http({
-        url: this.$http.adornUrl("/product/brand/update"),
+        url: this.$http.adornUrl("/product/brand/update/status"),
         method: "post",
-        // data: this.$http.adornData({brandId, showStatus}, false),
-        data: this.$http.adornData(newVal, false),
+        data: this.$http.adornData({ brandId, showStatus }, false),
+        // data: this.$http.adornData(newVal, false),
       }).then(({ data }) => {
-        this.$message({
-          message: "修改成功",
-          type: "success"
-        });
+        if (data.code === 0) {
+          this.$message({
+            message: "修改成功",
+            type: "success"
+          });
+        } else {
+          this.$message.error(data.msg);
+        }
       });
     },
     // 获取数据列表
