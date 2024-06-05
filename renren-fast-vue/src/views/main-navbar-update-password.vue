@@ -3,7 +3,7 @@
     title="修改密码"
     :visible.sync="visible"
     :append-to-body="true">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="120px">
       <el-form-item label="账号">
         <span>{{ userName }}</span>
       </el-form-item>

@@ -113,10 +113,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 // https://gitee.com/leifengyang/gulimall/blob/master/gulimall-product/src/main/java/com/atguigu/gulimall/product/GulimallProductApplication.java
 public class GulimallProductApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(GulimallProductApplication.class, args);
     }
-
 }
-

@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.product.exception;
 
+import com.atguigu.common.exception.BizCodeEnume;
 import com.atguigu.common.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
