@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,15 +34,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         /// 组装父子结构：
 
         // 查出一级分类
-        List<CategoryEntity> level1 = entities.stream()
-                .filter(entity -> entity.getParentCid() == 0)
-                .map(entity -> {
+        List<CategoryEntity> level1 = entities.stream().filter(entity -> entity.getParentCid() == 0).map(entity -> {
                     entity.setChildren(getChildren(entity, entities));
                     return entity;
                 })
                 // 0 是排序的默认值
-                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
-                .collect(Collectors.toList());
+                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort())).collect(Collectors.toList());
         return level1;
     }
 
@@ -53,6 +51,27 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         baseMapper.deleteBatchIds(ids);
     }
 
+    // 返回：[2, 25, 225]
+    // 也就是根据子分类，查出所有父分类id
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        ArrayList<Long> list = new ArrayList<>();
+        findCatelogPath(list, catelogId);
+        return list.toArray(new Long[list.size()]);
+    }
+
+    private void findCatelogPath(ArrayList<Long> list, Long catelogId) {
+        CategoryEntity entity = this.getById(catelogId);
+        if (entity != null) {
+            list.add(0, catelogId);
+            Long parentCid = entity.getParentCid();
+            if (parentCid != 0) {
+//                list.add(0, parentCid);
+                findCatelogPath(list, parentCid);
+            }
+        }
+    }
+
     // 递归查找所有子分类
     private List<CategoryEntity> getChildren(CategoryEntity root, List<CategoryEntity> all) {
         List<CategoryEntity> collect = all.stream()
@@ -61,9 +80,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 .map(entity -> {
                     entity.setChildren(getChildren(entity, all));
                     return entity;
-                })
-                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
-                .collect(Collectors.toList());
+                }).sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort())).collect(Collectors.toList());
         return collect;
     }
 
