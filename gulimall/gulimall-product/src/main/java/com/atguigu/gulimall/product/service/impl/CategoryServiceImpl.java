@@ -4,11 +4,15 @@ import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.Query;
 import com.atguigu.gulimall.product.dao.CategoryDao;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.service.CategoryBrandRelationService;
 import com.atguigu.gulimall.product.service.CategoryService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,9 @@ import java.util.stream.Collectors;
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -58,6 +65,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         ArrayList<Long> list = new ArrayList<>();
         findCatelogPath(list, catelogId);
         return list.toArray(new Long[list.size()]);
+    }
+
+    @Transactional
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+
+        //TODO 当category表中的某些字段被其他表使用，并且该字段发生了更新，那么也需要修改那些表的信息
+        if (!StringUtils.isEmpty(category.getName())) { // 分类名发生了变化
+            categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
+        }
     }
 
     private void findCatelogPath(ArrayList<Long> list, Long catelogId) {
