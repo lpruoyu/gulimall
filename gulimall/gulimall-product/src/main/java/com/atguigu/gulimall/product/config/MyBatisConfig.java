@@ -11,6 +11,20 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.atguigu.gulimall.product.dao")
 public class MyBatisConfig {
 
+    /*
+    分页查询：
+        # 假设每页15条（pageSize = 15）
+        # 假设查询第n页 （n >= 1）
+        #   SELECT * FROM student LIMIT (n - 1) * pageSize, pageSize;
+            SELECT * FROM student LIMIT 0, 15; # 查询第一页
+            SELECT * FROM student LIMIT 15, 15; # 查询第二页
+
+    总数量：101条
+    每一页显示20条
+    公式：总页数 = (总数量  +  每页的数量   -   1) / 每页的数量
+                = ( 101   +    20        -   1) / 20
+     */
+
     //引入分页插件
     @Bean
     public PaginationInterceptor paginationInterceptor() {
