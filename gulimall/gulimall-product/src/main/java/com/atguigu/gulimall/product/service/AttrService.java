@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.gulimall.product.entity.AttrEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,10 +22,12 @@ public interface AttrService extends IService<AttrEntity> {
 
     void saveAttr(AttrVo attr);
 
-    PageUtils queryAttrBasePage(Map<String, Object> params, Long catelogId);
+    PageUtils queryAttrPage(Map<String, Object> params, Long catelogId, String attrType);
 
     AttrRespVo getAttrInfo(Long attrId);
 
     void updateAttr(AttrVo attr);
+
+    List<AttrEntity> queryAttrsByAttrgroupId(Long attrgroupId);
 }
 

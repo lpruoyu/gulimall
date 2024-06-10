@@ -25,13 +25,16 @@ public class AttrController {
     private AttrService attrService;
 
     // /product/attr/base/list/{catelogId}
+    // /product/attr/sale/list/{catelogId}
     /**
      * 获取分类规格参数
      */
-    @GetMapping("/base/list/{catelogId}")
+    @GetMapping("/{attrType}/list/{catelogId}")
     // @RequiresPermissions("product:attr:list")
-    public R attrBaseList(@RequestParam Map<String, Object> params, @PathVariable("catelogId")Long catelogId){
-        PageUtils page = attrService.queryAttrBasePage(params, catelogId);
+    public R attrList(@RequestParam Map<String, Object> params,
+                      @PathVariable("catelogId")Long catelogId,
+                      @PathVariable("attrType")String attrType){
+        PageUtils page = attrService.queryAttrPage(params, catelogId,attrType);
 
         return R.ok().put("page", page);
     }
@@ -88,7 +91,7 @@ public class AttrController {
     // @RequiresPermissions("product:attr:delete")
     public R delete(@RequestBody Long[] attrIds){
 		attrService.removeByIds(Arrays.asList(attrIds));
-
+        //TODO 删除一条基本属性，也应该检查删除pms_attr_attrgroup_relation中的关联关系
         return R.ok();
     }
 
