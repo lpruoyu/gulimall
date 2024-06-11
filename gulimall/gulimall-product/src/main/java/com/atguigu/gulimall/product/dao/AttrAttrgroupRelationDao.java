@@ -32,4 +32,5 @@ public interface AttrAttrgroupRelationDao extends BaseMapper<AttrAttrgroupRelati
 
     void batchDeleteRelation(@Param("relations") List<AttrAttrGroupRelationVo> relationVos);
 
+//    void batchAddRelation(@Param("relations") List<AttrAttrGroupRelationVo> relationVos);
 }

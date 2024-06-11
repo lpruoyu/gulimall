@@ -11,6 +11,13 @@
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
 
+<!--    <insert id="batchAddRelation">-->
+<!--        INSERT INTO  `pms_attr_attrgroup_relation`(attr_id, attr_group_id) VALUES-->
+<!--        <foreach collection="relations" item="item" separator=",">-->
+<!--            (#{item.attrId} , #{item.attrGroupId})-->
+<!--        </foreach>-->
+<!--    </insert>-->
+
     <delete id="batchDeleteRelation">
         DELETE FROM `pms_attr_attrgroup_relation` WHERE
         <foreach collection="relations" item="item" separator=" OR ">

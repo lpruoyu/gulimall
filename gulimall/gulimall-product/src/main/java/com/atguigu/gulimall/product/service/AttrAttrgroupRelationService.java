@@ -21,5 +21,7 @@ public interface AttrAttrgroupRelationService extends IService<AttrAttrgroupRela
 
 //    void batchDeleteRelation(AttrAttrGroupRelationVo[] relationVos);
     void batchDeleteRelation(List<AttrAttrGroupRelationVo> relationVos);
+
+    void batchAddRelation(List<AttrAttrGroupRelationVo> relationVos);
 }
 

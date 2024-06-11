@@ -47,11 +47,21 @@ public class AttrGroupController {
 //        relationService.batchDeleteRelation(relationVos);
 //        return R.ok();
 //    }
-    //TODO 写博客：批量删除
     @PostMapping("/attr/relation/delete")
     public R batchDeleteRelation(@RequestBody List<AttrAttrGroupRelationVo> relationVos) {
         relationService.batchDeleteRelation(relationVos);
         return R.ok();
+    }
+
+    /**
+     * 获取本分类下，该属性分组还没有关联的其他基本属性
+     *
+     * /product/attrgroup/{attrgroupId}/noattr/relation
+     */
+    @GetMapping("/{attrgroupId}/noattr/relation")
+    public R attrGroupNoRelationAttrs(@RequestParam Map<String, Object> params, @PathVariable("attrgroupId") Long attrgroupId) {
+        PageUtils page = attrService.queryNoRelationAttrsByAttrgroupId(params, attrgroupId);
+        return R.ok().put("page", page);
     }
 
     /**
@@ -94,6 +104,16 @@ public class AttrGroupController {
         Long[] path = categoryService.findCatelogPath(catelogId);
         attrGroup.setCatelogPath(path);
         return R.ok().put("attrGroup", attrGroup);
+    }
+
+    /**
+     * 添加属性与分组关联关系
+     * /product/attrgroup/attr/relation
+     */
+    @PostMapping("/attr/relation")
+    public R batchAddRelation(@RequestBody List<AttrAttrGroupRelationVo> relationVos) {
+        relationService.batchAddRelation(relationVos);
+        return R.ok();
     }
 
     /**
