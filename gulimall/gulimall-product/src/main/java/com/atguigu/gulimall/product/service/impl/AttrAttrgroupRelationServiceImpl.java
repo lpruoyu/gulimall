@@ -45,6 +45,7 @@ public class AttrAttrgroupRelationServiceImpl extends ServiceImpl<AttrAttrgroupR
         this.baseMapper.batchDeleteRelation(relationVos);
     }
 
+    @Transactional
     @Override
     public void batchAddRelation(List<AttrAttrGroupRelationVo> relationVos) {
 //        使用自己写的批量添加也可以

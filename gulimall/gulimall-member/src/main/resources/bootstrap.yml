@@ -1,3 +1,23 @@
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://192.168.56.10:3306/gulimall_ums?useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto # 主键自增
+#   mapper-locations: classpath:/mapper/**/*.xml
+                    # classpath代表只扫描自己的
+  mapper-locations: classpath*:/mapper/**/*.xml
+
+
 #server:
 #  port: 8000
 #spring:
