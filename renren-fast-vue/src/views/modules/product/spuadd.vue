@@ -12,7 +12,8 @@
       </el-col>
       <el-col :span="24" v-show="step==0">
         <el-card class="box-card" style="width:80%;margin:20px auto">
-          <el-form ref="spuBaseForm" :model="spu" label-width="120px" :rules="spuBaseInfoRules">
+          <!-- :rules="spuBaseInfoRules" -->
+          <el-form ref="spuBaseForm" :model="spu" label-width="120px">
             <el-form-item label="商品名称" prop="spuName">
               <el-input v-model="spu.spuName"></el-input>
             </el-form-item>
@@ -676,14 +677,18 @@ export default {
           //先对表单的baseAttrs进行初始化
           data.data.forEach(item => {
             let attrArray = [];
-            item.attrs.forEach(attr => {
-              attrArray.push({
-                attrId: attr.attrId,
-                attrValues: "",
-                showDesc: attr.showDesc
-              });
+            if(item.attrs != null && item.attrs.length != 0){
+              item.attrs.forEach(attr => {
+                attrArray.push({
+                  attrId: attr.attrId,
+                  attrValues: "",
+                  showDesc: attr.showDesc
+                });
             });
-            this.dataResp.baseAttrs.push(attrArray);
+            }
+            if(attrArray.length != 0) {
+              this.dataResp.baseAttrs.push(attrArray);
+            }
           });
           this.dataResp.steped[0] = 0;
           this.dataResp.attrGroups = data.data;
