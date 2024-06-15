@@ -5,8 +5,6 @@ import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -20,7 +18,7 @@ import java.util.Map;
  * @date 2024-05-22 14:24:11
  */
 
-@RefreshScope
+//@RefreshScope
 @RestController
 @RequestMapping("member/member")
 public class MemberController {
@@ -30,15 +28,15 @@ public class MemberController {
 //    @Autowired
 //    private CouponFeignService couponFeignService;
 
-    @Value("${member.user.name}")
-    private String name;
-    @Value("${member.user.age}")
-    private Integer age;
+//    @Value("${member.user.name}")
+//    private String name;
+//    @Value("${member.user.age}")
+//    private Integer age;
 
-    @RequestMapping("/test")
-    public R test1() {
-        return R.ok().put("name", name).put("age", age);
-    }
+//    @RequestMapping("/test")
+//    public R test1() {
+//        return R.ok().put("name", name).put("age", age);
+//    }
 
 
 //    @RequestMapping("/coupons")

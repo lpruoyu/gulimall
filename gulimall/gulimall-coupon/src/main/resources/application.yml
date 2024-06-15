@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: gulimall-coupon
   datasource:
     username: root
     password: root
@@ -16,3 +18,10 @@ mybatis-plus:
 #   mapper-locations: classpath:/mapper/**/*.xml
                     # classpath代表只扫描自己的
   mapper-locations: classpath*:/mapper/**/*.xml
+
+logging:
+  level:
+    com.atguigu.gulimall: debug
+
+server:
+  port: 7000

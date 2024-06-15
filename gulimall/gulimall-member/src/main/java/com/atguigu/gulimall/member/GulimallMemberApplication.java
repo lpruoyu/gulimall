@@ -15,6 +15,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @MapperScan("com.atguigu.gulimall.member.dao")
 @SpringBootApplication
 @EnableDiscoveryClient
+//当GulimallMemberApplication和feign包在同一目录下可以不用写basePackages="com.atguigu.gulimall.member.feign"
 //@EnableFeignClients("com.atguigu.gulimall.member.feign")
 public class GulimallMemberApplication {
 

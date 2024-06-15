@@ -5,15 +5,29 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-      config:
-        server-addr: 127.0.0.1:8848
-        namespace: be4402d0-89a6-483b-9a8e-507bbda69589
-        group: dev
-        file-extension: yml
+#      config:
+#        server-addr: 127.0.0.1:8848
+#        namespace: be4402d0-89a6-483b-9a8e-507bbda69589
+#        group: dev
+#        file-extension: yml
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://192.168.56.10:3306/gulimall_pms?useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis-plus:
+  global-config:
+    db-config:
+      #      logic-delete-field: show_status # 全局逻辑删除字段名
+      logic-delete-value: 0 # 逻辑已删除值【全局】
+      logic-not-delete-value: 1 # 逻辑未删除值【全局】
+      id-type: auto
+  mapper-locations: classpath*:/mapper/**/*.xml
+  #   mapper-locations: classpath:/mapper/**/*.xml
+  # classpath代表只扫描自己的
+
 server:
   port: 12000
-
-
 
 #spring:
 #  application:

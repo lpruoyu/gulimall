@@ -1,9 +1,10 @@
 package com.atguigu.gulimall.product;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
 /**
  * 1、整合MyBatis-Plus
  *      1）、导入依赖
@@ -108,10 +109,18 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *
  *
  */
+
+
+/**
+https://gitee.com/leifengyang/gulimall/blob/master/gulimall-product/src/main/java/com/atguigu/gulimall/product/GulimallProductApplication.java
+*/
+
+
 //@MapperScan("com.atguigu.gulimall.product.dao")
 @SpringBootApplication
 @EnableDiscoveryClient
-// https://gitee.com/leifengyang/gulimall/blob/master/gulimall-product/src/main/java/com/atguigu/gulimall/product/GulimallProductApplication.java
+//@EnableFeignClients(basePackages = "com.atguigu.gulimall.product.feign")
+@EnableFeignClients
 public class GulimallProductApplication {
     public static void main(String[] args) {
         SpringApplication.run(GulimallProductApplication.class, args);
