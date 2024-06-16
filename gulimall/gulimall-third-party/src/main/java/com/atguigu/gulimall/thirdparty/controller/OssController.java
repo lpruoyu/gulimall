@@ -37,7 +37,8 @@ public class OssController {
          /*
             以日期为名字，搞个目录，每一天都可以产生一个新目录
          */
-        String dir = format + "/"; // 用户上传文件时指定的前缀。
+//        String dir = format + "/"; // 用户上传文件时指定的前缀。
+        String dir = format ; // 用户上传文件时指定的前缀。
 
         Map<String, String> respMap = null;
         try {
