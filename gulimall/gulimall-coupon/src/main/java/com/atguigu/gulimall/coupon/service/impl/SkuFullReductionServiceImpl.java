@@ -73,11 +73,8 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
             priceEntity.setMemberPrice(item.getPrice());
             priceEntity.setAddOther(1);
             return priceEntity;
-        })
-//                .filter(item -> {
-//                    return item.getMemberPrice().compareTo(new BigDecimal("0")) == 1;
-//                })
-                .collect(Collectors.toList());
+        }).filter(item -> item.getMemberPrice().compareTo(new BigDecimal("0")) == 1)
+          .collect(Collectors.toList());
 
         memberPriceService.saveBatch(collect);
     }
