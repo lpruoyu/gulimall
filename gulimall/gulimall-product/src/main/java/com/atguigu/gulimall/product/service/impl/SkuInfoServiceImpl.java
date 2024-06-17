@@ -55,7 +55,6 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         if (!StringUtils.isEmpty(catelogId) && !"0".equalsIgnoreCase(catelogId)) {
             queryWrapper.eq("catalog_id", catelogId);
         }
-//TODO 写博客
 //        queryWrapper.gt("column",val); great than 【大于】
 //        queryWrapper.lt("column",val); less than 【小于】
 //        queryWrapper.ge("column",val); great than and equal 【大于等于】
@@ -64,7 +63,6 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         if (!StringUtils.isEmpty(min)) {
             queryWrapper.ge("price", min);
         }
-//TODO 写博客
 //  BigDecimal使用compareTo比较大小：
 //        a.compareTo(b) == 1  【a > b】
 //        a.compareTo(b) == 0  【a = b】

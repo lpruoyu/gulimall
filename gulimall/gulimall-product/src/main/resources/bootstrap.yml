@@ -55,7 +55,7 @@ server:
 #                    # classpath代表只扫描自己的
 #  mapper-locations: classpath*:/mapper/**/*.xml
 #server:
+#  port: 12000
 logging:
   level:
     com.atguigu.gulimall: debug
-#  port: 12000

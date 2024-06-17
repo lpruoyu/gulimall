@@ -10,6 +10,8 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  jackson:
+    date-format: yyy-MM-dd HH:mm:ss
 
 mybatis-plus:
   global-config:
@@ -21,3 +23,7 @@ mybatis-plus:
 
 server:
   port: 11000
+
+logging:
+  level:
+    com.atguigu.gulimall: debug

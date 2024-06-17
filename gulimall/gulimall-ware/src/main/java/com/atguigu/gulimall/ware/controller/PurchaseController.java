@@ -4,10 +4,13 @@ import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.ware.entity.PurchaseEntity;
 import com.atguigu.gulimall.ware.service.PurchaseService;
+import com.atguigu.gulimall.ware.vo.MergePurchaseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +25,28 @@ import java.util.Map;
 public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
+
+    /**
+     * /ware/purchase/received
+     * 领取采购单
+     * 请求参数 [1,2,3,4]//采购单id
+     */
+    @PostMapping("/received")
+    public R receivePurchase(@RequestBody List<Long> ids){
+        purchaseService.receivePurchase(ids);
+        return R.ok();
+    }
+
+    /**
+     * /ware/purchase/unreceive/list
+     * 查询未领取的采购单
+     */
+    @GetMapping("/unreceive/list")
+    public R unreceiveList(@RequestParam Map<String, Object> params){
+        PageUtils page = purchaseService.queryUnreceivePage(params);
+
+        return R.ok().put("page", page);
+    }
 
     /**
      * 列表
@@ -52,8 +77,10 @@ public class PurchaseController {
     @RequestMapping("/save")
     //  @RequiresPermissions("ware:purchase:save")
     public R save(@RequestBody PurchaseEntity purchase){
-		purchaseService.save(purchase);
-
+        Date date = new Date();
+        purchase.setCreateTime(date);
+        purchase.setUpdateTime(date);
+        purchaseService.save(purchase);
         return R.ok();
     }
 
@@ -63,7 +90,25 @@ public class PurchaseController {
     @RequestMapping("/update")
     // @RequiresPermissions("ware:purchase:update")
     public R update(@RequestBody PurchaseEntity purchase){
-		purchaseService.updateById(purchase);
+        purchaseService.updateById(purchase);
+
+        return R.ok();
+    }
+
+    /**
+     * /ware/purchase/merge
+     * 请求方法:
+     * POST
+     *
+     * {
+     *   purchaseId: 1, //整单id【没有提交采购单id的话，需要创建一个采购新单】
+     *   items:[1,2,3,4] //采购需求id合并项集合
+     * }
+     */
+    @PostMapping ("/merge")
+    // @RequiresPermissions("ware:purchase:update")
+    public R mergePurchase(@RequestBody MergePurchaseVo vo){
+        purchaseService.mergePurchase(vo);
 
         return R.ok();
     }
