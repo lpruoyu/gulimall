@@ -5,7 +5,6 @@
   window.SITE_CONFIG = {};
 
   // api接口请求地址
-  // 直接给网关发送请求
   window.SITE_CONFIG['baseUrl'] = 'http://localhost:88/api';
 
   // cdn地址 = 域名 + 版本号

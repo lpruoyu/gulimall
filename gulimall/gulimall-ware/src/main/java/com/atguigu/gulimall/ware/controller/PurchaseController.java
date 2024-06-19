@@ -5,6 +5,7 @@ import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.ware.entity.PurchaseEntity;
 import com.atguigu.gulimall.ware.service.PurchaseService;
 import com.atguigu.gulimall.ware.vo.MergePurchaseVo;
+import com.atguigu.gulimall.ware.vo.PurchaseDoneVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,25 @@ public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
 
+    /**
+     * /ware/purchase/done
+     * 完成采购
+     * 请求参数：
+     * {
+     *    id: 123,//采购单id
+     *    items: [{itemId:1,status:4,reason:""}]//完成/失败的需求详情
+     * }
+     * 请求体：
+        {
+        "id": 1,
+        "items": [{"itemId":1,"status":3},{"itemId":2,"status":4,"reason":"没钱"},{"itemId":3,"status":3}]
+        }
+     */
+    @PostMapping("/done")
+    public R donePurchase(@RequestBody PurchaseDoneVo purchaseDoneVo){
+        purchaseService.donePurchase(purchaseDoneVo);
+        return R.ok();
+    }
     /**
      * /ware/purchase/received
      * 领取采购单
