@@ -75,7 +75,8 @@ public class GulimallSearchApplicationTests {
 
 
     /**
-     * （1）、方便检索{
+     * （1）、方便检索
+     * {
      *      skuId:1
      *      spuId:11
      *      skuTitle:华为xx
@@ -87,8 +88,9 @@ public class GulimallSearchApplicationTests {
      *          {分辨率：全高清}
      *      ]
      *  }
-     * 冗余：
+     * 冗余：同一个spu的规格参数是一样的，直接存sku会有冗余信息，不过问题不大：
      *  100万*20=1000000*2KB=2000MB=2G 20
+     *
      * （2）、
      *    sku索引{
      *     skuId:1
@@ -105,15 +107,21 @@ public class GulimallSearchApplicationTests {
      *      ]
      *    }
      *
-     *   搜索 小米； 粮食，手机，电器。
-     *   10000个，4000个spu
-     *   分步，4000个spu对应的所有可能属性；
-     *   esClient： spuId:[4000个spuid] 4000*8=32000byte=32kb
+     *   虽然没有冗余数据但是：
      *
-     *   32kb*10000=32000mb;=32GB
+     *   搜索 小米；
+     *        粮食类/手机类/电器类都有小米
+     *   10000个带小米两字的商品，涉及到了4000个spu
      *
+     *   此时我们会分步，找4000个spu对应的所有可能属性；
      *
-     * @throws IOException
+     *   esClient：不说别的，光spuId:[4000个spuid（id都是long数据）] 4000*8=32000byte=32kb 【一个请求32kb数据】
+     *
+     *   32kb*10000个人=32000mb;=32GB
+     */
+
+    /**
+     * 空间与时间不可兼得
      */
 
 

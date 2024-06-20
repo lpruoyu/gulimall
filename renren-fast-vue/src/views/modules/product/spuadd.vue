@@ -12,7 +12,7 @@
       </el-col>
       <el-col :span="24" v-show="step==0">
         <el-card class="box-card" style="width:80%;margin:20px auto">
-          <el-form ref="spuBaseForm" :model="spu" label-width="120px" :rules="spuBaseInfoRules">
+          <el-form ref="spuBaseForm" :model="spu" label-width="120px">
             <el-form-item label="商品名称" prop="spuName">
               <el-input v-model="spu.spuName"></el-input>
             </el-form-item>

@@ -12,7 +12,7 @@ spring:
       uris: 127.0.0.1:9200
 
 server:
-  port: 12000
+  port: 13000
 
 logging:
   level:
