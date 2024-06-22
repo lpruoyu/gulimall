@@ -17,6 +17,9 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
+
 mybatis-plus:
   global-config:
     db-config:
