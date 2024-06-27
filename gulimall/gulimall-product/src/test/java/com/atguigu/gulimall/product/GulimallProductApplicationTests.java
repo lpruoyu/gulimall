@@ -5,6 +5,7 @@ import com.atguigu.gulimall.product.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,6 +19,17 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class GulimallProductApplicationTests {
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    @Test
+    public void testRedissonClient(){
+        System.out.println(redissonClient);
+    }
+
+
+    //==========================
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
