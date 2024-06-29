@@ -38,6 +38,13 @@ mybatis-plus:
 server:
   port: 12000
 
+
+thread:
+  core-pool-size: 20
+  maximum-pool-size: 200
+  keep-alive-time: 10
+  queue-capacity: 10000
+
 #spring:
 #  application:
 #    name: gulimall-product

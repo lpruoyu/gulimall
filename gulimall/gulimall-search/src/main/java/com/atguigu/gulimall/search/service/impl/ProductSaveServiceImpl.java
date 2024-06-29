@@ -28,6 +28,7 @@ public class ProductSaveServiceImpl implements ProductSaveService {
 
     @Override
     public boolean productStatusUp(List<SkuEsModel> skuEsModels) throws IOException {
+
         //保存到es
         //1、给es中建立索引。product，建立好映射关系。
 
@@ -53,6 +54,8 @@ public class ProductSaveServiceImpl implements ProductSaveService {
         }).collect(Collectors.toList());
         log.info("商品上架完成：{}，返回数据：{}",collect,bulk.toString());
 
+
         return b;
+
     }
 }
