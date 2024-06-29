@@ -10,6 +10,8 @@ spring:
   elasticsearch:
     jest:
       uris: 127.0.0.1:9200
+  thymeleaf:
+    cache: false
 
 server:
   port: 13000
