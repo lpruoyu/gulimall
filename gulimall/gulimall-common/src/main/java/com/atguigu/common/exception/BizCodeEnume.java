@@ -15,10 +15,15 @@ package com.atguigu.common.exception;
  *  14: 物流
  */
 public enum BizCodeEnume {
+    SUCCESS(0, "OK"),
+    HTTP_SUCCESS(200, "OK"),
+
     UNKNOW_EXCEPTION(10000,"系统未知异常"),
     VAILD_EXCEPTION(10001,"参数格式校验失败"),
     TOO_MANY_REQUEST(10002,"请求流量过大"),
-    SMS_CODE_EXCEPTION(10002,"验证码获取频率太高，稍后再试"),
+    SMS_MULTI_EXCEPTION(10003,"验证码获取频率太高，请1分钟后再试"),
+    SMS_SEND_EXCEPTION(10004,"验证码发送失败"),
+
     PRODUCT_UP_EXCEPTION(11000,"商品上架异常"),
     USER_EXIST_EXCEPTION(15001,"用户存在"),
     PHONE_EXIST_EXCEPTION(15002,"手机号存在"),

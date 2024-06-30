@@ -1,15 +1,52 @@
 package com.atguigu.gulimall.thirdparty;
 
+import com.aliyun.auth.credentials.provider.StaticCredentialProvider;
 import com.aliyun.oss.*;
+import com.aliyun.sdk.service.dysmsapi20170525.AsyncClient;
+import com.aliyun.sdk.service.dysmsapi20170525.models.SendSmsRequest;
+import com.aliyun.sdk.service.dysmsapi20170525.models.SendSmsResponse;
+import darabonba.core.client.ClientOverrideConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 
 @SpringBootTest
 class GulimallThirdPartyApplicationTests {
+
+    @Autowired
+     StaticCredentialProvider provider;
+
+    @Test
+    public void testSms() throws ExecutionException, InterruptedException {
+        AsyncClient client = AsyncClient.builder()
+                .region("cn-shanghai") // Region ID
+                .credentialsProvider(provider)
+                .overrideConfiguration(
+                        ClientOverrideConfiguration.create()
+                                .setEndpointOverride("dysmsapi.aliyuncs.com")
+                )
+                .build();
+
+        SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
+                .signName("阿里云短信测试")
+                .templateCode("SMS_154950909")
+                .phoneNumbers("18724859790")
+                .templateParam("{\"code\":\"" + 6789 +"\"}")
+                .build();
+
+        CompletableFuture<SendSmsResponse> response = client.sendSms(sendSmsRequest);
+        SendSmsResponse resp = response.get();
+
+//        System.err.println(new Gson().toJson(resp));
+
+        client.close();
+    }
 
 
     @Autowired

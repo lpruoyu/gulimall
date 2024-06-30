@@ -42,7 +42,7 @@ server:
 thread:
   core-pool-size: 20
   maximum-pool-size: 200
-  keep-alive-time: 10
+  keep-alive-time: 3600
   queue-capacity: 10000
 
 #spring:

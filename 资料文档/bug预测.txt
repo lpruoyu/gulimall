@@ -1,16 +1,3 @@
-181P，分享一个自己遇到的问题：
-问题：org.elasticsearch.ElasticsearchException: Elasticsearch exception [type=illegal_argument_exception, reason=Can't load fielddata on 【brandName】 because fielddata is unsupported on fields of type 【keyword】. Use doc values instead.]
-
-思路：出现该错误是因为ES5.x之后，对聚合所依据的字段用单独的数据结构(fielddata)缓存到内存里了，但是在text字段上默认是禁用的，如果有需要单独开启，这样做的目的是为了节省内存空间。
-具体实现方法可以参考文档或者自行百度。
-
-解决：在字段里加上keyword，例如：
-.field("brandName.keyword")
-.field("brandImg.keyword")
-.field("catalogName.keyword")
-.field("attrs.attrName.keyword")
-
-
 
 9.6看到p261，开始投秋招，到9.25，0offer，知识点问的频率统计：es0，mq1；redisson1；token1；社交登录0；验证码防刷1；多线程很多家；业务没人问；springcache0；压测2；三级缓存1；redis好几家；nginx1；jvm很多；微服务很多家；docker1。总结：基本问的八股文，特别是多线程、mysql索引B+树、类加载、map、list、redis，这些基本是必问，没企业关心应届生做的学习类项目。
 2023-09-25 15:20
@@ -32,16 +19,10 @@ P290：seata0.7.1版本的报插入为空错误的是因为seata 0.7.1不支持�
 还要注意 seata版本要与springcloud alibaba的版本对应，不然可能因为版本问题导致服务无法启动
 
 
-本地nginx nginx【反向代理使用云服务提示未备案】
-
 
 
 P213的阿里短信服务，如果没有备案域名和已上线可访问的地址的话，签名和模板是没法审核通过的，这个可以用容联云代替，缺点就是最多绑定三个手机号，也就是只能给这三个手机号发验证码，不过走项目流程是够了，可以看一下我怎么写的
 https://gitee.com/shen_guo_ji/gulimall
-
-
-
-
 
 
 

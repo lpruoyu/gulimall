@@ -10,6 +10,7 @@ package com.atguigu.common.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.common.exception.BizCodeEnume;
 import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class R extends HashMap<String, Object> {
     private static final long serialVersionUID = 1L;
 
     //利用fastjson进行逆转
-    public <T> T getData(String key, TypeReference<T> typeReference){
+    public <T> T getData(String key, TypeReference<T> typeReference) {
         Object data = get(key);// 默认是map
         String s = JSON.toJSONString(data); // 得转为JSON字符串
         T t = JSON.parseObject(s, typeReference);
@@ -32,18 +33,18 @@ public class R extends HashMap<String, Object> {
     }
 
     //利用fastjson进行逆转
-    public <T> T getData(TypeReference<T> typeReference){
+    public <T> T getData(TypeReference<T> typeReference) {
         return getData("data", typeReference);
     }
 
-    public R setData(Object data){
-        put("data",data);
+    public R setData(Object data) {
+        put("data", data);
         return this;
     }
 
     public R() {
-        put("code", 0);
-        put("msg", "success");
+        put("code", BizCodeEnume.SUCCESS.getCode());
+        put("msg", BizCodeEnume.SUCCESS.getMsg());
     }
 
     public static R error() {
@@ -58,6 +59,13 @@ public class R extends HashMap<String, Object> {
         R r = new R();
         r.put("code", code);
         r.put("msg", msg);
+        return r;
+    }
+
+    public static R error(BizCodeEnume bizCodeEnume) {
+        R r = new R();
+        r.put("code", bizCodeEnume.getCode());
+        r.put("msg", bizCodeEnume.getMsg());
         return r;
     }
 
