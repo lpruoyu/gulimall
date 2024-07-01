@@ -1,6 +1,7 @@
 package com.atguigu.common.exception;
 
 /***
+ * TODO 写博客
  * 错误码和错误信息定义类
  * 1. 错误码定义规则为5位数字
  * 2. 前两位表示业务场景，最后三位表示错误码。例如：100001。
@@ -23,6 +24,8 @@ public enum BizCodeEnume {
     TOO_MANY_REQUEST(10002,"请求流量过大"),
     SMS_MULTI_EXCEPTION(10003,"验证码获取频率太高，请1分钟后再试"),
     SMS_SEND_EXCEPTION(10004,"验证码发送失败"),
+    SMS_CODE_EXCEPTION(10005,"验证码错误"),
+    REG_ERROR_EXCEPTION(10006,"用户名或手机已存在，注册失败"),
 
     PRODUCT_UP_EXCEPTION(11000,"商品上架异常"),
     USER_EXIST_EXCEPTION(15001,"用户存在"),
@@ -32,6 +35,7 @@ public enum BizCodeEnume {
 
     private final int code;
     private final String msg;
+
     BizCodeEnume(int code,String msg){
         this.code = code;
         this.msg = msg;

@@ -5,7 +5,6 @@ import com.aliyun.auth.credentials.provider.StaticCredentialProvider;
 import com.aliyun.sdk.service.dysmsapi20170525.AsyncClient;
 import com.aliyun.sdk.service.dysmsapi20170525.models.SendSmsRequest;
 import com.aliyun.sdk.service.dysmsapi20170525.models.SendSmsResponse;
-import com.atguigu.common.exception.BizCodeEnume;
 import com.atguigu.common.utils.R;
 import darabonba.core.client.ClientOverrideConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +60,10 @@ public class SendSmsController {
          */
         client.close();
 
-        if (resp.getBody().getMessage().equalsIgnoreCase("OK")) return R.ok();
-        return R.error(BizCodeEnume.SMS_SEND_EXCEPTION);
+//        if (resp.getBody().getMessage().equalsIgnoreCase("OK")) return R.ok();
+//        return R.error(BizCodeEnume.SMS_SEND_EXCEPTION);
+
+        return R.ok();
     }
 
 }

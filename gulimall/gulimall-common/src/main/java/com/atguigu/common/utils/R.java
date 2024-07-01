@@ -11,18 +11,17 @@ package com.atguigu.common.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.atguigu.common.exception.BizCodeEnume;
-import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 返回数据
- *
- * @author Mark sunlightcs@gmail.com
+ * TODO 写博客 返回数据
  */
 public class R extends HashMap<String, Object> {
-    private static final long serialVersionUID = 1L;
+    public static final String CODE = "code";
+    public static final String MSG = "msg";
+    public static final String DATA = "data";
 
     //利用fastjson进行逆转
     public <T> T getData(String key, TypeReference<T> typeReference) {
@@ -34,44 +33,45 @@ public class R extends HashMap<String, Object> {
 
     //利用fastjson进行逆转
     public <T> T getData(TypeReference<T> typeReference) {
-        return getData("data", typeReference);
+        return getData(DATA, typeReference);
     }
 
     public R setData(Object data) {
-        put("data", data);
+        put(DATA, data);
         return this;
     }
 
     public R() {
-        put("code", BizCodeEnume.SUCCESS.getCode());
-        put("msg", BizCodeEnume.SUCCESS.getMsg());
+        put(CODE, BizCodeEnume.SUCCESS.getCode());
+        put(MSG, BizCodeEnume.SUCCESS.getMsg());
     }
 
     public static R error() {
-        return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "未知异常，请联系管理员");
+        return error("服务器未知异常，请联系管理员");
     }
 
     public static R error(String msg) {
-        return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, msg);
+//        500
+        return error(org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR, msg);
     }
 
     public static R error(int code, String msg) {
         R r = new R();
-        r.put("code", code);
-        r.put("msg", msg);
+        r.put(CODE, code);
+        r.put(MSG, msg);
         return r;
     }
 
     public static R error(BizCodeEnume bizCodeEnume) {
         R r = new R();
-        r.put("code", bizCodeEnume.getCode());
-        r.put("msg", bizCodeEnume.getMsg());
+        r.put(CODE, bizCodeEnume.getCode());
+        r.put(MSG, bizCodeEnume.getMsg());
         return r;
     }
 
     public static R ok(String msg) {
         R r = new R();
-        r.put("msg", msg);
+        r.put(MSG, msg);
         return r;
     }
 
@@ -91,6 +91,10 @@ public class R extends HashMap<String, Object> {
     }
 
     public Integer getCode() {
-        return (Integer) this.get("code");
+        return (Integer) this.get(CODE);
+    }
+
+    public String getMsg() {
+        return (String) this.get(MSG);
     }
 }
