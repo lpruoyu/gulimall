@@ -26,6 +26,8 @@ public enum BizCodeEnume {
     SMS_SEND_EXCEPTION(10004,"验证码发送失败"),
     SMS_CODE_EXCEPTION(10005,"验证码错误"),
     REG_ERROR_EXCEPTION(10006,"用户名或手机已存在，注册失败"),
+    USER_ERROR_EXCEPTION(10007,"用户不存在"),
+    PASSWORD_ERROR_EXCEPTION(10008,"密码错误"),
 
     PRODUCT_UP_EXCEPTION(11000,"商品上架异常"),
     USER_EXIST_EXCEPTION(15001,"用户存在"),

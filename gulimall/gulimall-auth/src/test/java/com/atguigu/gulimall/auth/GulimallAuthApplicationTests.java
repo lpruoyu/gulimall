@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class GulimallAuthApplicationTests {
     @Test
     public void contextLoads() {
-//TODO 写博客
         //MD5是不可逆的，但是利用它的抗修改性（一个字符串的MD5值永远是那个值），发明了彩虹表（暴力破解）。
         //所以，MD5不能直接进行密码的加密存储;
 //        String s = DigestUtils.md5Hex("123456");

@@ -6,9 +6,12 @@ import com.atguigu.gulimall.member.dao.MemberDao;
 import com.atguigu.gulimall.member.dao.MemberLevelDao;
 import com.atguigu.gulimall.member.entity.MemberEntity;
 import com.atguigu.gulimall.member.entity.MemberLevelEntity;
+import com.atguigu.gulimall.member.exception.PasswordErrorException;
 import com.atguigu.gulimall.member.exception.PhoneExistException;
+import com.atguigu.gulimall.member.exception.UserErrorException;
 import com.atguigu.gulimall.member.exception.UsernameExistException;
 import com.atguigu.gulimall.member.service.MemberService;
+import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegistVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -71,6 +74,23 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         if (count > 0) {
             throw new UsernameExistException();
         }
+    }
+
+    @Override
+    public MemberEntity login(MemberLoginVo vo) throws UserErrorException, PasswordErrorException {
+        String loginacct = vo.getLoginacct();
+        MemberEntity member = this.baseMapper.selectOne(
+                new QueryWrapper<MemberEntity>().eq("username", loginacct).or().eq("mobile", loginacct)
+        );
+        if(null == member) {
+            throw new UserErrorException();
+        }
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean matches = passwordEncoder.matches(vo.getPassword(), member.getPassword());
+        if(!matches) {
+            throw new PasswordErrorException();
+        }
+        return member;
     }
 
 }

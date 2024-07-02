@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO 写博客 返回数据
  */
 public class R extends HashMap<String, Object> {
     public static final String CODE = "code";

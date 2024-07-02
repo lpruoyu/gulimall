@@ -4,9 +4,12 @@ import com.atguigu.common.exception.BizCodeEnume;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.member.entity.MemberEntity;
+import com.atguigu.gulimall.member.exception.PasswordErrorException;
 import com.atguigu.gulimall.member.exception.PhoneExistException;
+import com.atguigu.gulimall.member.exception.UserErrorException;
 import com.atguigu.gulimall.member.exception.UsernameExistException;
 import com.atguigu.gulimall.member.service.MemberService;
+import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegistVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -108,14 +111,30 @@ public class MemberController {
     }
 
     @PostMapping("/regist")
-    public R regist(@RequestBody MemberRegistVo vo){
-        try{
+    public R regist(@RequestBody MemberRegistVo vo) {
+        try {
             memberService.regist(vo);
-        }catch (PhoneExistException e){
+        } catch (PhoneExistException e) {
             return R.error(BizCodeEnume.PHONE_EXIST_EXCEPTION);
-        }catch (UsernameExistException e){
+        } catch (UsernameExistException e) {
             return R.error(BizCodeEnume.USER_EXIST_EXCEPTION);
         }
         return R.ok();
     }
+
+    @PostMapping("/login")
+    public R login(@RequestBody MemberLoginVo vo) {
+        try {
+            MemberEntity member = memberService.login(vo);
+            if (member != null) {
+                return R.ok().setData(member);
+            }
+        } catch (UserErrorException e) {
+            return R.error(BizCodeEnume.USER_ERROR_EXCEPTION);
+        } catch (PasswordErrorException e) {
+            return R.error(BizCodeEnume.PASSWORD_ERROR_EXCEPTION);
+        }
+        return R.error();
+    }
+
 }

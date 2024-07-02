@@ -1,11 +1,14 @@
 package com.atguigu.gulimall.auth.controller;
 
+import com.alibaba.fastjson.TypeReference;
 import com.atguigu.common.constant.AuthServerConstant;
 import com.atguigu.common.exception.BizCodeEnume;
 import com.atguigu.common.to.EmailTo;
 import com.atguigu.common.utils.R;
+import com.atguigu.common.vo.MemberRespVo;
 import com.atguigu.gulimall.auth.feign.MemberFeignService;
 import com.atguigu.gulimall.auth.feign.ThirdPartyFeignService;
+import com.atguigu.gulimall.auth.vo.UserLoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegistVo;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -141,13 +145,13 @@ public class LoginController {
     }
 
     /**
-     * //重定向携带数据，是利用session原理。将数据放在session中。
-     * 只要跳到下一个页面取出这个数据以后，session里面的数据就会删掉
+     * //重定向携带数据，是利用session原理。
+     * 将数据放在session中，只要跳到下一个页面取出这个数据以后，session里面的数据就会删掉
      * <p>
      *  TODO 解决分布式下的session问题。
      */
     @PostMapping("/regist")
-    public String regist( /*@Valid*/ UserRegistVo vo, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String regist(@Valid UserRegistVo vo, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) { //数据校验不通过
             /*
              * .map(fieldError -> {
@@ -201,4 +205,33 @@ public class LoginController {
         return "redirect:http://auth.gulimall.com/reg.html";
     }
 
+
+//    @GetMapping("/login.html")
+//    public String loginPage(HttpSession session) {
+//        Object attribute = session.getAttribute(AuthServerConstant.LOGIN_USER);
+//        if (attribute == null) {
+//            //没登录
+//            return "login";
+//        } else {
+//            return "redirect:http://gulimall.com";
+//        }
+//    }
+
+
+    @PostMapping("/login")
+    public String login(@Valid UserLoginVo vo, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) { //数据校验不通过
+            Map<String, String> errors = result.getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+            redirectAttributes.addFlashAttribute("errors", errors);
+            return "redirect:http://auth.gulimall.com/reg.html";
+        }
+        R login = memberFeignService.login(vo);
+        if (login.getCode() == BizCodeEnume.SUCCESS.getCode()) {
+            MemberRespVo data = login.getData(new TypeReference<MemberRespVo>() {
+            });
+            System.out.println("登录成功");
+            return "redirect:http://gulimall.com";
+        }
+        return "redirect:http://auth.gulimall.com/login.html";
+    }
 }
