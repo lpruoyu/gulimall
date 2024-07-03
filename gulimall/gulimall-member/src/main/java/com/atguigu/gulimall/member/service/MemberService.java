@@ -8,6 +8,7 @@ import com.atguigu.gulimall.member.exception.UserErrorException;
 import com.atguigu.gulimall.member.exception.UsernameExistException;
 import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegistVo;
+import com.atguigu.gulimall.member.vo.SocialUserAccessToken;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.Map;
@@ -30,5 +31,7 @@ public interface MemberService extends IService<MemberEntity> {
     void checkUsernameUnique(String username) throws UsernameExistException;
 
     MemberEntity login(MemberLoginVo vo) throws UserErrorException, PasswordErrorException;
+
+    MemberEntity login(SocialUserAccessToken accessToken);
 }
 

@@ -28,6 +28,7 @@ public enum BizCodeEnume {
     REG_ERROR_EXCEPTION(10006,"用户名或手机已存在，注册失败"),
     USER_ERROR_EXCEPTION(10007,"用户不存在"),
     PASSWORD_ERROR_EXCEPTION(10008,"密码错误"),
+    LOGIN_ERROR_EXCEPTION(10009,"登录失败"),
 
     PRODUCT_UP_EXCEPTION(11000,"商品上架异常"),
     USER_EXIST_EXCEPTION(15001,"用户存在"),

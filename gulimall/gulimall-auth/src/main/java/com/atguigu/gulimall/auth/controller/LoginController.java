@@ -234,4 +234,5 @@ public class LoginController {
         }
         return "redirect:http://auth.gulimall.com/login.html";
     }
+
 }

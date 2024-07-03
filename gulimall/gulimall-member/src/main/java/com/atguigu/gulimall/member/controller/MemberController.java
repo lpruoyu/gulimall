@@ -11,6 +11,7 @@ import com.atguigu.gulimall.member.exception.UsernameExistException;
 import com.atguigu.gulimall.member.service.MemberService;
 import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegistVo;
+import com.atguigu.gulimall.member.vo.SocialUserAccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -135,6 +136,15 @@ public class MemberController {
             return R.error(BizCodeEnume.PASSWORD_ERROR_EXCEPTION);
         }
         return R.error();
+    }
+
+    @PostMapping("/socialLogin")
+    public R socialLogin(@RequestBody SocialUserAccessToken accessToken) {
+        MemberEntity member = memberService.login(accessToken);
+        if (member != null) {
+            return R.ok().setData(member);
+        }
+        return R.error(BizCodeEnume.LOGIN_ERROR_EXCEPTION);
     }
 
 }

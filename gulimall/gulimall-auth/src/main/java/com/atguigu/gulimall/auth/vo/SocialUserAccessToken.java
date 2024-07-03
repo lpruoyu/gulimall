@@ -3,7 +3,7 @@ package com.atguigu.gulimall.auth.vo;
 import lombok.Data;
 
 @Data
-public class SocialUser {
+public class SocialUserAccessToken {
     private String access_token;
     private String remind_in;
     private long expires_in;
