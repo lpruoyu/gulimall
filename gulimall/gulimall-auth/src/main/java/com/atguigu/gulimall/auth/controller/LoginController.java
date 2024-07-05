@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,17 +36,12 @@ import java.util.stream.Collectors;
 @Controller
 //@RestController
 public class LoginController {
-    @GetMapping("/login.html")
-    public String loginPage() {
-//        if(stringRedisTemplate.opsForValue().get("loginUser") != null) return "redirect:http://gulimall.com";
-        return "login";
-    }
+
 //
 //    @GetMapping("/reg.html")
 //    public String regPage() {
 //        return "reg";
 //    }
-
 
     @Autowired
     private ThreadPoolExecutor threadPool;
@@ -220,7 +216,7 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public String login(@Valid UserLoginVo vo, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String login(@Valid UserLoginVo vo, BindingResult result, RedirectAttributes redirectAttributes, HttpSession session) {
         if (result.hasErrors()) { //数据校验不通过
             Map<String, String> errors = result.getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
             redirectAttributes.addFlashAttribute("errors", errors);
@@ -230,10 +226,19 @@ public class LoginController {
         if (login.getCode() == BizCodeEnume.SUCCESS.getCode()) {
             MemberRespVo data = login.getData(new TypeReference<MemberRespVo>() {
             });
-            System.out.println("登录成功");
+            session.setAttribute(AuthServerConstant.LOGIN_USER, data);
             return "redirect:http://gulimall.com";
         }
         return "redirect:http://auth.gulimall.com/login.html";
+    }
+
+//    登录页面
+    @GetMapping("/login.html")
+    public String loginPage(HttpSession session) {
+//        if(stringRedisTemplate.opsForValue().get("loginUser") != null) return "redirect:http://gulimall.com";
+        Object attribute = session.getAttribute(AuthServerConstant.LOGIN_USER);
+        if(attribute != null) return "redirect:http://gulimall.com";
+        return "login";
     }
 
 }
