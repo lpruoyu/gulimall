@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
  * 1、整合MyBatis-Plus
@@ -115,6 +116,7 @@ https://gitee.com/leifengyang/gulimall/blob/master/gulimall-product/src/main/jav
 
 //@MapperScan("com.atguigu.gulimall.product.dao")
 
+@EnableRedisHttpSession // 整合Redis作为session存储
 @SpringBootApplication
 @EnableDiscoveryClient
 //@EnableFeignClients(basePackages = "com.atguigu.gulimall.product.feign")

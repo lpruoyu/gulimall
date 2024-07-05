@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,7 +30,24 @@ public class IndexController {
     private StringRedisTemplate stringRedisTemplate;
 
     @GetMapping({"/", "/index.html"})
-    public String indexPage(Model model) {
+    public String indexPage(Model model, HttpServletRequest httpServletRequest,
+                            HttpSession session) {
+
+//        /**
+//         * 手动获取Cookie
+//         */
+//        Cookie[] cookies = httpServletRequest.getCookies();
+//        if (null != cookies && cookies.length > 0) {
+//            for (Cookie cookie : cookies) {
+//                if (cookie.getName().equalsIgnoreCase("GULIMALL")) {
+//                    String loginUserKey = cookie.getValue();
+//                    String json = stringRedisTemplate.opsForValue().get(loginUserKey);
+//                    MemberRespVo loginUser = JSON.parseObject(json, new TypeReference<MemberRespVo>(){});
+//                    session.setAttribute("loginUser", loginUser);
+//                }
+//            }
+//        }
+
         List<CategoryEntity> categorys = categoryService.listLevel1Categorys();
         model.addAttribute("categorys", categorys);
         return "index";

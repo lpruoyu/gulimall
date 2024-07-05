@@ -21,7 +21,7 @@ public class GulimallAuthWebConfig implements WebMvcConfigurer {
          */
         //用户注册->/regist[post]----》转发/reg.html（路径映射默认都是get方式访问的。）
         //只是get请求能映射
-        registry.addViewController("/login.html").setViewName("login");
+//        registry.addViewController("/login.html").setViewName("login");
         registry.addViewController("/reg.html").setViewName("reg");
     }
 }

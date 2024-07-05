@@ -142,15 +142,18 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
                     String gender = jsonObject.getString("gender");
                     //........
                     regist.setNickname(name);
+                    regist.setUsername(name);
                     regist.setGender("m".equals(gender) ? 1 : 0);
                     //........
                 }
             } catch (Exception e) {}
 
+//            关联social_uid和用户id
             regist.setSocialUid(socialUser.getUid());
             regist.setAccessToken(accessToken);
             regist.setExpiresIn(expiresIn);
 
+//            注册用户
             memberDao.insert(regist);
 
             return regist;

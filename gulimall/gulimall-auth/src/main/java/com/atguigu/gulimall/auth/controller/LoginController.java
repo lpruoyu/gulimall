@@ -35,10 +35,11 @@ import java.util.stream.Collectors;
 @Controller
 //@RestController
 public class LoginController {
-//    @GetMapping("/login.html")
-//    public String loginPage() {
-//        return "login";
-//    }
+    @GetMapping("/login.html")
+    public String loginPage() {
+//        if(stringRedisTemplate.opsForValue().get("loginUser") != null) return "redirect:http://gulimall.com";
+        return "login";
+    }
 //
 //    @GetMapping("/reg.html")
 //    public String regPage() {
