@@ -240,7 +240,7 @@
                         <div class="user_info_tou">
                             <a href="/static/#"><img class="" src="/static/index/img/touxiang.png"></a>
                         </div>
-                        <div class="user_info_show">
+                        <div th:if="${session.loginUser==null}" class="user_info_show">
                             <p class="">Hi, 欢迎来到!</p>
                             <p>
                                 <a href="/static/#" class="">登录</a>

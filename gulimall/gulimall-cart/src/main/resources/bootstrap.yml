@@ -1,27 +1,18 @@
 spring:
-  application:
-    name: gulimall-search
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-  elasticsearch:
-    jest:
-      uris: 127.0.0.1:9200
   thymeleaf:
     cache: false
   redis:
     host: 192.168.56.10
-  session:
-    store-type: redis
+    port: 6379
 
 server:
-  port: 13000
+  port: 16000
+
 
 logging:
   level:
     com.atguigu.gulimall: debug
-
-

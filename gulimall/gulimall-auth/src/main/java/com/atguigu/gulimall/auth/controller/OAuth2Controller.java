@@ -73,6 +73,8 @@ public class OAuth2Controller {
 //                /**
 //                 * 手动设置Cookie
 //                 */
+//                Redis中不应该以loginUser作为用户的key，而是应该以UUID作为key来存储用户信息。
+//                而且，我们在这儿实现是将用户转为JSON字符串存起来，为了后续方便取出用户这个对象信息，应该直接以对象的方式将用户保存起来，这样从Redis中取出来的数据对象直接就能使用
 //                stringRedisTemplate.opsForValue().set("loginUser", JSON.toJSONString(loginUser));
 //                Cookie cookie = new Cookie("GULIMALL", "loginUser");
 //                cookie.setDomain("gulimall.com");
