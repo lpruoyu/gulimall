@@ -1,14 +1,11 @@
 package com.atguigu.gulimall.cart.vo;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * 购物项内容
  */
-
 public class CartItem {
     private Long skuId;
     private Boolean check = true;

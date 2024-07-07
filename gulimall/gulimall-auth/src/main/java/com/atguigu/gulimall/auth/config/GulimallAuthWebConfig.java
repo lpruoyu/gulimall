@@ -6,6 +6,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class GulimallAuthWebConfig implements WebMvcConfigurer {
+
+//    @Autowired
+//    private GulimallAuthSessionInterceptor interceptor;
+
     /**
      * 视图映射
      */
@@ -24,4 +28,9 @@ public class GulimallAuthWebConfig implements WebMvcConfigurer {
 //        registry.addViewController("/login.html").setViewName("login");
         registry.addViewController("/reg.html").setViewName("reg");
     }
+
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(interceptor).addPathPatterns("/**");
+//    }
 }

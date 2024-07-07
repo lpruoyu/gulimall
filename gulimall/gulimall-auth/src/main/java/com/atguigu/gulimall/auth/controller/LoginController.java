@@ -224,9 +224,26 @@ public class LoginController {
         }
         R login = memberFeignService.login(vo);
         if (login.getCode() == BizCodeEnume.SUCCESS.getCode()) {
-            MemberRespVo data = login.getData(new TypeReference<MemberRespVo>() {
+            MemberRespVo loginUser = login.getData(new TypeReference<MemberRespVo>() {
             });
-            session.setAttribute(AuthServerConstant.LOGIN_USER, data);
+
+//            /**
+//             * 手动设置Session
+//             */
+//            String rsessionId = GulimallAuthSessionInterceptor.THREAD_LOCAL.get();
+//            String rsessionJson = stringRedisTemplate.opsForValue().get(rsessionId);
+//            HashMap<String, String> rsession;
+//            if (StringUtils.isEmpty(rsessionJson)) {
+//                rsession = new HashMap<>();
+//            } else {
+//                rsession = JSON.parseObject(rsessionJson, HashMap.class);
+//            }
+//            rsession.put(AuthServerConstant.LOGIN_USER, JSON.toJSONString(loginUser));
+//            stringRedisTemplate.opsForValue().set(rsessionId, JSON.toJSONString(rsession));
+
+
+//              5 使用SpringSession【跟以前使用session的写法一样】
+            session.setAttribute(AuthServerConstant.LOGIN_USER, loginUser);
             return "redirect:http://gulimall.com";
         }
         return "redirect:http://auth.gulimall.com/login.html";

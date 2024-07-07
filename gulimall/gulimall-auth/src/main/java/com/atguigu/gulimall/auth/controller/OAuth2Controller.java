@@ -44,8 +44,7 @@ public class OAuth2Controller {
      */
 
     @GetMapping("/oauth2.0/weibo/success")
-    public String weibo(@RequestParam("code") String code, HttpSession session,
-                        HttpServletResponse httpServletResponse) throws Exception {
+    public String weibo(@RequestParam("code") String code, HttpSession session, HttpServletResponse httpServletResponse) throws Exception {
         Map<String, String> headers = new HashMap<>();
         Map<String, String> bodys = new HashMap<>();
         bodys.put("client_id", "3276999101");

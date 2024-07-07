@@ -49,8 +49,9 @@ public interface CartService {
      */
     void deleteItem(Long skuId);
 
-
+    /**
+     * 获取当前用户所有购物项
+     */
     List<CartItem> getUserCartItems();
-
 
 }

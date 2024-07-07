@@ -30,8 +30,7 @@ public class IndexController {
     private StringRedisTemplate stringRedisTemplate;
 
     @GetMapping({"/", "/index.html"})
-    public String indexPage(Model model, HttpServletRequest httpServletRequest,
-                            HttpSession session) {
+    public String indexPage(Model model, HttpServletRequest httpServletRequest, HttpSession session) {
 
 //        /**
 //         * 手动获取Cookie
@@ -47,6 +46,36 @@ public class IndexController {
 //                }
 //            }
 //        }
+
+
+//        /**
+//         * 手动获取session
+//         */
+//        Cookie[] cookies = httpServletRequest.getCookies();
+//        if (null != cookies && cookies.length > 0) {
+//            for (Cookie cookie : cookies) {
+//                if (cookie.getName().equals(AuthServerConstant.REDIS_SESSION_ID_KEY)) {
+//                    String rsessionId = cookie.getValue();
+//                    String rsessionJson = stringRedisTemplate.opsForValue().get(rsessionId);
+//                    HashMap<String, String> rsession;
+//                    if (StringUtils.isEmpty(rsessionJson)) {
+//                        rsession = new HashMap<>();
+//                    } else {
+//                        rsession = JSON.parseObject(rsessionJson, HashMap.class);
+//                    }
+//                    String s = rsession.get(AuthServerConstant.LOGIN_USER);
+//                    if (!StringUtils.isEmpty(s)) {
+//                        MemberRespVo loginUser = JSON.parseObject(s, new TypeReference<MemberRespVo>() {
+//                        });
+//                        session.setAttribute(AuthServerConstant.LOGIN_USER, loginUser);
+//                    }
+//                }
+//            }
+//        }
+//        Object attribute = session.getAttribute(AuthServerConstant.LOGIN_USER);
+//        model.addAttribute(AuthServerConstant.LOGIN_USER, attribute);
+//        System.out.println("thymeleaf可以直接获取session中的属性进行使用：" + attribute);
+
 
         List<CategoryEntity> categorys = categoryService.listLevel1Categorys();
         model.addAttribute("categorys", categorys);
