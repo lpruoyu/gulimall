@@ -10,6 +10,8 @@ spring:
         server-addr: 127.0.0.1:8848
   application:
     name: gulimall-order
+  thymeleaf:
+    cache: false
 
 mybatis-plus:
   global-config:

@@ -184,6 +184,7 @@ public class LoginController {
                 R regist = memberFeignService.regist(vo);
                 if (regist.getCode() == BizCodeEnume.SUCCESS.getCode())
 //                     注册成功
+//                    TODO 使用RabbitMQ发送邮件或者短信通知用户注册成功
                     return "redirect:http://auth.gulimall.com/login.html";
                 else {
                     // 注册失败
