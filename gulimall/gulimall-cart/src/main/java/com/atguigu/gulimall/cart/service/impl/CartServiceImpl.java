@@ -3,6 +3,7 @@ package com.atguigu.gulimall.cart.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.atguigu.common.constant.CartConstant;
+import com.atguigu.common.exception.BizCodeEnume;
 import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.cart.feign.ProductFeignService;
 import com.atguigu.gulimall.cart.interceptor.GulimallCartInterceptor;
@@ -16,6 +17,7 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -24,6 +26,33 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
+
+    //    给Order服务开放的接口
+    @Override
+    public List<CartItem> getUserCartItems() {
+        if (GulimallCartInterceptor.THREAD_LOCAL.get().getUserId() == null) return null;
+
+        BoundHashOperations<String, Object, Object> ops = getCurrentUserCartHashOps();
+        List<CartItem> cartItems = listCartItems(ops);
+        cartItems = cartItems.stream()
+                .filter(CartItem::getCheck) // 只获取被选中的商品
+                // 购物项有可能是很长一段时间前加入到购物车的，所以得去数据库查询最新价格
+                .map(item -> {
+                    R price = productFeignService.getPrice(item.getSkuId());
+                    if (price.getCode() == BizCodeEnume.SUCCESS.getCode()) {
+                        BigDecimal priceData = price.getData(new TypeReference<BigDecimal>() {});
+                        item.setPrice(priceData); // 更新价格为商品的最新价格
+                    } else {
+                        throw new RuntimeException("查询最新价格失败");
+                    }
+                    return item;
+                })
+                .collect(Collectors.toList());
+
+        return cartItems;
+    }
+
+//    =======================================================================================================================
 
     @Autowired
     ThreadPoolExecutor threadPool;
@@ -151,11 +180,6 @@ public class CartServiceImpl implements CartService {
         }, threadPool);
     }
 
-    @Override
-    public List<CartItem> getUserCartItems() {
-        return null;
-    }
-
     private BoundHashOperations<String, Object, Object> getCurrentUserCartHashOps() {
         UserInfoTo userInfoTo = GulimallCartInterceptor.THREAD_LOCAL.get();
         String userKey = userInfoTo.getUserKey();
@@ -176,4 +200,12 @@ public class CartServiceImpl implements CartService {
             return values.stream().map(item -> JSON.parseObject(item.toString(), CartItem.class)).collect(Collectors.toList());
         return null;
     }
+
+    private List<CartItem> listCartItems(BoundHashOperations<String, Object, Object> ops) {
+        List<Object> values = ops.values();
+        if (null != values && values.size() > 0)
+            return values.stream().map(item -> JSON.parseObject(item.toString(), CartItem.class)).collect(Collectors.toList());
+        return null;
+    }
+
 }

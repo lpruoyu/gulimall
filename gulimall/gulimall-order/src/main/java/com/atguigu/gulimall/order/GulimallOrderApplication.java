@@ -5,6 +5,9 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+
 /**
  * 使用RabbitMQ
  * 1、引入amqp场景启动器；RabbitAutoConfiguration 就会自动生效
@@ -24,6 +27,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *    @RabbitHandler：配合@RabbitListener标在方法上（重载区分不同的消息）
  */
 
+@EnableFeignClients
+@EnableRedisHttpSession
 @EnableRabbit
 @MapperScan("com.atguigu.gulimall.order.dao")
 @SpringBootApplication

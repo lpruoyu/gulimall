@@ -146,13 +146,15 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
                     regist.setGender("m".equals(gender) ? 1 : 0);
                     //........
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
 
 //            关联social_uid和用户id
             regist.setSocialUid(socialUser.getUid());
             regist.setAccessToken(accessToken);
             regist.setExpiresIn(expiresIn);
-
+//            TODO 查询默认等级再设置 ums_member_level
+            regist.setLevelId(1L);
 //            注册用户
             memberDao.insert(regist);
 

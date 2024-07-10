@@ -38,7 +38,6 @@ spring:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
-          #需要把精确的路由放到上面【/api/product/**比/api/**更精确】
 
         - id: third_party_route
           uri: lb://gulimall-third-party
@@ -46,6 +45,8 @@ spring:
             - Path=/api/thirdparty/**
           filters:
             - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+
+          #需要把精确的路由放到上面【/api/product/**比/api/**更精确】
 
         - id: admin_route
           uri: lb://renren-fast
@@ -77,6 +78,11 @@ spring:
           uri: lb://gulimall-cart
           predicates:
             - Host=cart.gulimall.com
+
+        - id: gulimall_order_route
+          uri: lb://gulimall-order
+          predicates:
+            - Host=order.gulimall.com
 #spring:
 #  cloud:
 #    gateway:
