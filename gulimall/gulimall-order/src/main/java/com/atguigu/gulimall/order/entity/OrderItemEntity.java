@@ -2,11 +2,11 @@ package com.atguigu.gulimall.order.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.math.BigDecimal;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
+import lombok.ToString;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 订单项信息
@@ -16,6 +16,7 @@ import lombok.Data;
  * @date 2024-05-22 14:21:06
  */
 @Data
+@ToString
 @TableName("oms_order_item")
 public class OrderItemEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

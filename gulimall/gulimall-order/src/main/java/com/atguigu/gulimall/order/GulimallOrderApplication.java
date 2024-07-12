@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 使用RabbitMQ
@@ -27,6 +28,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  *    @RabbitHandler：配合@RabbitListener标在方法上（重载区分不同的消息）
  */
 
+@EnableTransactionManagement
 @EnableFeignClients
 @EnableRedisHttpSession
 @EnableRabbit

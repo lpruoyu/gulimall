@@ -16,6 +16,7 @@ public class GuliFeignConfig {
         return template -> {
             System.out.println("RequestInterceptor线程...." + Thread.currentThread().getId());
             // 通过RequestContextHolder拿到刚进来的这个请求
+            // 通过RequestContextHolder获取到的RequestAttributes是Spring自动设置的
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             if (attributes != null) {
                 HttpServletRequest request = attributes.getRequest(); //老请求

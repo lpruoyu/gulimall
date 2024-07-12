@@ -46,5 +46,4 @@ public class MemberAddressVo {
      * 是否默认
      */
     private Integer defaultStatus;
-
 }
