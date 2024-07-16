@@ -206,6 +206,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         return true;
     }
 
+    @Transactional
     @Override
     public void unlockStock(StockLockedTo to) {
         StockDetailTo detail = to.getDetail();
@@ -244,7 +245,6 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         }
     }
 
-    @Transactional
     private void unLockStock(Long skuId, Long wareId, Integer num, Long taskDetailId) {
         //库存解锁
         wareSkuDao.unlockStock(skuId, wareId, num);

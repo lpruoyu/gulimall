@@ -13,6 +13,10 @@ public class GulimallWareRabbitBaseConfig {
         return new Jackson2JsonMessageConverter();
     }
 
+//    TODO 为了保证消息可靠发送，去抽取一个MQ微服务，发送MQ消息，都调用该微服务的接口
+//     在MQ微服务里每次发送消息前将该消息保存到数据库，并做好发送回调，修改消息的发送状态
+//     定时扫描数据库，再次发送那些发送失败的消息
+
 //    private RabbitTemplate rabbitTemplate;
 //
 //    @Primary

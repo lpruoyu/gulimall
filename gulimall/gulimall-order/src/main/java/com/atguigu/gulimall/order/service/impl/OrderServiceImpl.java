@@ -82,6 +82,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return new PageUtils(page);
     }
 
+//    /**
+//     * 处理支付宝的支付结果
+//     */
+//    @Override
+//    public String handlePayResult(PayAsyncVo vo) {
+//        //1、保存交易流水
+//        PaymentInfoEntity infoEntity = new PaymentInfoEntity();
+//        infoEntity.setAlipayTradeNo(vo.getTrade_no());
+//        infoEntity.setOrderSn(vo.getOut_trade_no());
+//        infoEntity.setPaymentStatus(vo.getTrade_status());
+//        infoEntity.setCallbackTime(vo.getNotify_time());
+//
+//        paymentInfoService.save(infoEntity);
+//
+//        //2、修改订单的状态信息
+//        if (vo.getTrade_status().equals("TRADE_SUCCESS") || vo.getTrade_status().equals("TRADE_FINISHED")) {
+//            //支付成功状态
+//            String outTradeNo = vo.getOut_trade_no();
+//            this.baseMapper.updateOrderStatus(outTradeNo,OrderStatusEnum.PAYED.getCode());
+//        }
+//        return "success";
+//    }
+
     @Override
     public OrderConfirmVo confirmOrder() throws ExecutionException, InterruptedException {
         OrderConfirmVo confirmVo = new OrderConfirmVo();
@@ -176,7 +199,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     }
 
-
     @Override
     public void closeOrder(OrderEntity entity) {
         //查询当前这个订单的最新状态
@@ -201,6 +223,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         }
     }
 
+    @Override
+    public PageUtils listWithItem(Map<String, Object> params) {
+        MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
+        IPage<OrderEntity> page = this.page(
+                new Query<OrderEntity>().getPage(params),
+                new QueryWrapper<OrderEntity>().eq("member_id", memberRespVo.getId()).orderByDesc("id")
+        );
+
+        List<OrderEntity> order_sn = page.getRecords().stream().map(order -> {
+            List<OrderItemEntity> itemEntities = orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", order.getOrderSn()));
+            order.setItemEntities(itemEntities);
+            return order;
+        }).collect(Collectors.toList());
+
+        page.setRecords(order_sn);
+
+        return new PageUtils(page);
+    }
 
     //本地事务，在分布式系统下，只能控制住自己的回滚，控制不了其他服务的回滚
     //应该使用分布式事务，但是分布式事务比较复杂，比较复杂的最大原因：网络问题+分布式机器。
@@ -299,8 +339,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 保存订单数据
-     *
-     * @param order
      */
     private void saveOrder(OrderCreateTo order) {
         OrderEntity orderEntity = order.getOrder();
