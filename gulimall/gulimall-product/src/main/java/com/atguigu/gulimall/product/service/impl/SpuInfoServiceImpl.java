@@ -19,10 +19,10 @@ import com.atguigu.gulimall.product.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -65,8 +65,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         return new PageUtils(page);
     }
 
-    //Seata AT 分布式事务
-    @Transactional
+    //适合使用Seata AT 分布式事务（后台系统没有高并发）
+//    @Transactional
+    @GlobalTransactional
     @Override
     public void saveSpuInfo(SpuSaveVo vo) {
         //1、保存spu基本信息 pms_spu_info

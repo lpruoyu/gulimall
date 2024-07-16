@@ -52,7 +52,7 @@ public class SpuBoundsController {
     @PostMapping("/save")
     //  @RequiresPermissions("coupon:spubounds:save")
     public R save(@RequestBody SpuBoundsEntity spuBounds){
-		spuBoundsService.save(spuBounds);
+		spuBoundsService.saveSpuBounds(spuBounds);
 
         return R.ok();
     }

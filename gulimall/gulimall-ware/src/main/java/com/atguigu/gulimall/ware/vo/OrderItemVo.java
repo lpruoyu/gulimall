@@ -7,7 +7,6 @@ import java.util.List;
 
 @Data
 public class OrderItemVo {
-
     private Long skuId;
     private String title;
     private String image;
@@ -17,6 +16,4 @@ public class OrderItemVo {
     private BigDecimal totalPrice;
 
     private BigDecimal weight;
-
-
 }

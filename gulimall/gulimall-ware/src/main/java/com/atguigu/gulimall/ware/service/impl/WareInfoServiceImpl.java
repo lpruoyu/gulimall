@@ -50,7 +50,7 @@ public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity
     @Override
     public FareVo getFare(Long addrId) {
         FareVo fareVo = new FareVo();
-        R info = memberFeignService.info(addrId);
+        R info = memberFeignService.addrInfo(addrId);
         if(info.getCode() == BizCodeEnume.SUCCESS.getCode()) {
             MemberAddressVo data = info.getData("memberReceiveAddress", new TypeReference<MemberAddressVo>() {
             });

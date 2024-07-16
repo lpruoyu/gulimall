@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.order.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.common.to.mq.OrderTo;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.Query;
 import com.atguigu.common.utils.R;
@@ -24,10 +25,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
@@ -66,6 +71,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     OrderItemService orderItemService;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -140,11 +148,63 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return confirmVo;
     }
 
-    //本地事务，在分布式系统，只能控制住自己的回滚，控制不了其他服务的回滚
-    //分布式事务： 最大原因。网络问题+分布式机器。
-    //(isolation = Isolation.REPEATABLE_READ)
+
+    //事务的隔离级别(isolation = Isolation.REPEATABLE_READ)
     //REQUIRED、REQUIRES_NEW
-//    @GlobalTransactional  //高并发
+
+    //坑：同一个对象内，事务方法互调，他们的事务设置默认失效，原因：事务使用代理对象来控制的，直接调用绕过了代理对象
+    @Transactional(timeout = 30)
+    public void a() {
+        //b，c做任何设置都没用。都是和a公用一个事务
+//        this.b(); 没用
+//        this.c(); 没用
+        OrderServiceImpl orderService = (OrderServiceImpl) AopContext.currentProxy();
+        orderService.b(); //a事务，应用到了自己的事务设置REQUIRED，如果是REQUIRED，那么自己的事务设置不起作用，和a()共用
+        orderService.c(); //新事务(不回滚)，应用到了自己的事务设置REQUIRES_NEW, timeout = 20
+//        bService.b(); //a事务
+//        cService.c(); //新事务(不回滚)
+        int i = 10 / 0;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 2)
+    public void b() {
+        //执行了7s
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, timeout = 20)
+    public void c() {
+
+    }
+
+
+    @Override
+    public void closeOrder(OrderEntity entity) {
+        //查询当前这个订单的最新状态
+        OrderEntity orderEntity = this.getById(entity.getId());
+        if (Objects.equals(orderEntity.getStatus(), OrderStatusEnum.CREATE_NEW.getCode())) {
+            //关单
+            OrderEntity update = new OrderEntity();
+            update.setId(entity.getId());
+            update.setStatus(OrderStatusEnum.CANCLED.getCode());
+            this.updateById(update);
+            OrderTo orderTo = new OrderTo();
+            BeanUtils.copyProperties(orderEntity, orderTo);
+            try {
+                //TODO 方式1
+                //TODO 保证消息一定会发送出去，每一个消息都可以做好日志记录（给数据库保存每一个消息的详细信息）。
+                //TODO 定期扫描数据库将失败的消息再发送一遍；
+                rabbitTemplate.convertAndSend("order-event-exchange", "order.release.other", orderTo);
+            } catch (Exception e) {
+                //TODO 方式2
+                //TODO 将没发送成功的消息进行重试发送。
+            }
+        }
+    }
+
+
+    //本地事务，在分布式系统下，只能控制住自己的回滚，控制不了其他服务的回滚
+    //应该使用分布式事务，但是分布式事务比较复杂，比较复杂的最大原因：网络问题+分布式机器。
+//    @GlobalTransactional //    高并发场景，Seata的AT模式不适合
     @Transactional
     @Override
     public SubmitOrderResponseVo submitOrder(OrderSubmitVo vo) {
@@ -181,20 +241,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 //4、库存锁定。只要有异常回滚订单数据。
                 // 库存锁定需要的数据：订单号，所有订单项（skuId，skuName，num）
 
+                //4、远程锁库存
+                //TODO 问题1：库存调用成功了，但是网络原因，或者其他原因，导致Feign调用超时了，出现异常，此时：订单回滚，库存不会回滚。
                 R r = wareFeignService.orderLockStock(getLockVo(order));
 
-                //4、远程锁库存
-                //库存成功了，但是网络原因超时了，订单回滚，库存不滚。
-                //为了保证高并发。库存服务自己回滚。可以发消息给库存服务；
-                //库存服务本身也可以使用自动解锁模式  消息
+                // TODO 为了保证高并发 不使用seata，使用消息队列
+                // 方式1、在这儿可以发消息给库存服务让库存服务回滚
+                // 方式2、库存服务本身也可以使用自动解锁模式（使用延时队列实现定时任务）
 
                 if (r.getCode() == 0) {
                     //锁成功了
                     response.setOrder(order.getOrder());
 
-                    //TODO 5、远程扣减积分 出异常
+                    //TODO 问题2：假如还有个远程扣减积分服务
+                    // 该服务出异常 ：订单会回滚；由于库存服务已经成功的远程执行，不会回滚。
+//                    int i = 10/0; //模拟扣减积分出异常
 
-                    //TODO 6、清除购物车已经下单的商品
+
+                    // 订单创建成功发送消息给MQ
+                    rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
+
+
+                    //TODO 清除购物车已经下单的商品
 
                     return response;
                 } else {
@@ -208,6 +276,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 return response;
             }
         }
+    }
+
+    @Override
+    public OrderEntity getOrderByOrderSn(String orderSn) {
+        return this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
     }
 
     private WareSkuLockVo getLockVo(OrderCreateTo order) {

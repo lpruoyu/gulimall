@@ -92,7 +92,7 @@ public class MyRabbitConfig {
              */
             @Override
             public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
-                //报错了:修改数据库当前消息的状态——>队列接收错误
+                //报错了:修改数据库当前消息的状态——>队列接收消息发生错误
 //                System.out.println("Fail Message[" + message + "]==>replyCode[" + replyCode + "]==>replyText[" + replyText + "]===>exchange[" + exchange + "]===>routingKey[" + routingKey + "]");
             }
         });

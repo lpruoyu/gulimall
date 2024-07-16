@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -42,6 +43,7 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
         return new PageUtils(page);
     }
 
+    @Transactional
     @Override
     public void saveSkuReduction(SkuReductionTo reductionTo) {
         //sku的优惠、满减等信息；gulimall_sms->sms_sku_ladder\sms_sku_full_reduction\sms_member_price
