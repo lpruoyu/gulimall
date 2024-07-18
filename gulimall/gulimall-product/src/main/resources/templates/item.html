@@ -257,7 +257,7 @@
 						<div class="nav_top_one" style="width:auto;">
 							<a href="http://gulimall.com"><img src="/static/item/image/logo1.jpg"/></a></div>
 						<div class="nav_top_two"><input type="text"/><button>搜索</button></div>
-						<div class="nav_top_three"><a href="http://cart.gulimall.com/cart.html">我的购物车</a><span class="glyphicon glyphicon-shopping-cart"></span>
+						<div class="nav_top_three"><a href="/static/item/../JD_Shop/One_JDshop.html">我的购物车</a><span class="glyphicon glyphicon-shopping-cart"></span>
 							<div class="nav_top_three_1">
 								<img src="/static/item/img/44.png"/>购物车还没有商品，赶紧选购吧！
 							</div>
@@ -507,7 +507,15 @@
 									<span>￥</span>
 									<span th:text="${#numbers.formatDecimal(item.info.price,3,2)}">4499.00</span>
 								</li>
+								<li style="color: red" th:if="${item.seckillInfo!=null}">
+									<span th:if="${#dates.createNow().getTime()< item.seckillInfo.startTime}">
+										商品将会在[[${#dates.format(new java.util.Date(item.seckillInfo.startTime),"yyyy-MM-dd HH:mm:ss")}]]进行秒杀
+									</span>
 
+									<span th:if="${#dates.createNow().getTime()>=item.seckillInfo.startTime && #dates.createNow().getTime()<=item.seckillInfo.endTime}">
+										秒杀价：[[${#numbers.formatDecimal(item.seckillInfo.seckillPrice,1,2)}]]
+									</span>
+								</li>
 								<li>
 									<a href="/static/item/">
 										预约说明
@@ -627,12 +635,12 @@
 
 								</div>
 							</div>
-							<div class="box-btns-two">
-								<a href="#" id="secKillA" th:attr="skuId=${item.info.skuId}">
+							<div class="box-btns-two" th:if="${item.seckillInfo!=null && (#dates.createNow().getTime()>=item.seckillInfo.startTime && #dates.createNow().getTime()<=item.seckillInfo.endTime)}">
+								<a href="#" id="secKillA" th:attr="skuId=${item.info.skuId},sessionId=${item.seckillInfo.promotionSessionId},code=${item.seckillInfo.randomCode}">
 									立即抢购
 								</a>
 							</div>
-							<div class="box-btns-two" >
+							<div class="box-btns-two" th:if="${item.seckillInfo==null||(#dates.createNow().getTime()<item.seckillInfo.startTime || #dates.createNow().getTime()>item.seckillInfo.endTime)}">
 								<a href="#" id="addToCartA" th:attr="skuId=${item.info.skuId}">
 									加入购物车
 								</a>

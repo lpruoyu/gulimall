@@ -33,8 +33,8 @@ public class SeckillSkuScheduled {
     private static final String SECKILL_UPLOAD_LOCK = "seckill:upload:lock";
 
     @Async
-    @Scheduled(cron = "*/3 * * * * ?")
-//    @Scheduled(cron = "0 * * * * ?") //每分钟执行一次吧，上线后调整为每天晚上3点执行
+//    @Scheduled(cron = "*/3 * * * * ?")
+    @Scheduled(cron = "0 * * * * ?") //每分钟执行一次吧，上线后调整为每天晚上3点执行
 //    @Scheduled(cron = "0 0 3 * * ?") //线上模式
     public void uploadSeckillSkuLatest3Days(){
 

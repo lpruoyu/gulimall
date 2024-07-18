@@ -9,7 +9,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 @Component
 public class LoginUserInterceptor implements HandlerInterceptor {
 
@@ -18,7 +17,6 @@ public class LoginUserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        //  /order/order/status/2948294820984028420
         String uri = request.getRequestURI();
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         boolean match = antPathMatcher.match("/kill", uri);

@@ -1,12 +1,16 @@
 package com.atguigu.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.Query;
+import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.product.dao.SkuInfoDao;
 import com.atguigu.gulimall.product.entity.SkuImagesEntity;
 import com.atguigu.gulimall.product.entity.SkuInfoEntity;
 import com.atguigu.gulimall.product.entity.SpuInfoDescEntity;
+import com.atguigu.gulimall.product.feign.SeckillFeignService;
 import com.atguigu.gulimall.product.service.*;
+import com.atguigu.gulimall.product.vo.SeckillInfoVo;
 import com.atguigu.gulimall.product.vo.SkuItemSaleAttrVo;
 import com.atguigu.gulimall.product.vo.SkuItemVo;
 import com.atguigu.gulimall.product.vo.SpuItemAttrGroupVo;
@@ -38,8 +42,8 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     @Autowired
     AttrGroupService attrGroupService;
 
-//    @Autowired
-//    SeckillFeignService seckillFeignService;
+    @Autowired
+    SeckillFeignService seckillFeignService;
 
     @Autowired
     SkuSaleAttrValueService skuSaleAttrValueService;
@@ -114,7 +118,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     }
 
     @Override
-    public SkuItemVo item(Long skuId) {
+    public SkuItemVo item(Long skuId) throws ExecutionException, InterruptedException {
         SkuItemVo skuItemVo = new SkuItemVo();
 
         CompletableFuture<SkuInfoEntity> infoFuture = CompletableFuture.supplyAsync(() -> {
@@ -147,25 +151,24 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             List<SkuImagesEntity> images = imagesService.getImagesBySkuId(skuId);
             skuItemVo.setImages(images);
         }, executor);
-//
+
 //        //3、查询当前sku是否参与秒杀优惠
-////        CompletableFuture<Void> secKillFuture = CompletableFuture.runAsync(() -> {
-////            R seckillInfo = seckillFeignService.getSkuSeckillInfo(skuId);
-////            if (seckillInfo.getCode() == 0) {
-////                SeckillInfoVo seckillInfoVo = seckillInfo.getData(new TypeReference<SeckillInfoVo>() {
-////                });
-////                skuItemVo.setSeckillInfo(seckillInfoVo);
-////            }
-////        }, executor);
-//
-//
+        CompletableFuture<Void> secKillFuture = CompletableFuture.runAsync(() -> {
+            R seckillInfo = seckillFeignService.getSkuSeckillInfo(skuId);
+            if (seckillInfo.getCode() == 0) {
+                SeckillInfoVo seckillInfoVo = seckillInfo.getData(new TypeReference<SeckillInfoVo>() {
+                });
+                skuItemVo.setSeckillInfo(seckillInfoVo);
+            }
+        }, executor);
+
 //        //等到所有任务都完成
-        try {
-            CompletableFuture.allOf(saleAttrFuture, descFuture, baseAttrFuture, imageFuture).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-////        CompletableFuture.allOf(saleAttrFuture, descFuture, baseAttrFuture, imageFuture, secKillFuture).get();
+//        try {
+//            CompletableFuture.allOf(saleAttrFuture, descFuture, baseAttrFuture, imageFuture).get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//        }
+        CompletableFuture.allOf(infoFuture, saleAttrFuture, descFuture, baseAttrFuture, imageFuture, secKillFuture).get();
 
         return skuItemVo;
     }

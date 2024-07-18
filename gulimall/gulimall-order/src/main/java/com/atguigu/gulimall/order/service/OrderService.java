@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.order.service;
 
+import com.atguigu.common.to.mq.SeckillOrderTo;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.vo.OrderConfirmVo;
@@ -33,5 +34,8 @@ public interface OrderService extends IService<OrderEntity> {
     void closeOrder(OrderEntity entity);
 
     PageUtils listWithItem(Map<String, Object> params);
+
+    void createSeckillOrder(SeckillOrderTo seckillOrder);
+
 }
 

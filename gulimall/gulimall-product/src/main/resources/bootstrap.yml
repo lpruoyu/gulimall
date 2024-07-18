@@ -13,7 +13,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://192.168.56.10:3306/gulimall_pms?useSSL=false
+    url: jdbc:mysql://192.168.56.10:3306/gulimall_pms?serverTimezone=Asia/Shanghai&useSSL=false&characterEncoding=utf-8
     driver-class-name: com.mysql.jdbc.Driver
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
