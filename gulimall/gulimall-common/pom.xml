@@ -119,7 +119,6 @@
             <artifactId>jetty-util</artifactId>
             <version>9.3.7.v20160115</version>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>
@@ -141,5 +140,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 </project>
