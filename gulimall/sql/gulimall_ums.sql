@@ -1,190 +1,157 @@
-drop table if exists ums_growth_change_history;
-
-drop table if exists ums_integration_change_history;
-
-drop table if exists ums_member;
-
-drop table if exists ums_member_collect_spu;
-
-drop table if exists ums_member_collect_subject;
-
-drop table if exists ums_member_level;
-
-drop table if exists ums_member_login_log;
-
-drop table if exists ums_member_receive_address;
-
-drop table if exists ums_member_statistics_info;
-
-/*==============================================================*/
-/* Table: ums_growth_change_history                             */
-/*==============================================================*/
 create table ums_growth_change_history
 (
-   id                   bigint not null auto_increment comment 'id',
-   member_id            bigint comment 'member_id',
-   create_time          datetime comment 'create_time',
-   change_count         int comment '¸Ä±äµÄÖµ£¨Õı¸º¼ÆÊı£©',
-   note                 varchar(0) comment '±¸×¢',
-   source_type          tinyint comment '»ı·ÖÀ´Ô´[0-¹ºÎï£¬1-¹ÜÀíÔ±ĞŞ¸Ä]',
-   primary key (id)
-);
+    id           bigint auto_increment comment 'id'
+        primary key,
+    member_id    bigint     null comment 'member_id',
+    create_time  datetime   null comment 'create_time',
+    change_count int        null comment 'æ”¹å˜çš„å€¼ï¼ˆæ­£è´Ÿè®¡æ•°ï¼‰',
+    note         varchar(0) null comment 'å¤‡æ³¨',
+    source_type  tinyint    null comment 'ç§¯åˆ†æ¥æº[0-è´­ç‰©ï¼Œ1-ç®¡ç†å‘˜ä¿®æ”¹]'
+)
+    comment 'æˆé•¿å€¼å˜åŒ–å†å²è®°å½•';
 
-alter table ums_growth_change_history comment '³É³¤Öµ±ä»¯ÀúÊ·¼ÇÂ¼';
-
-/*==============================================================*/
-/* Table: ums_integration_change_history                        */
-/*==============================================================*/
 create table ums_integration_change_history
 (
-   id                   bigint not null auto_increment comment 'id',
-   member_id            bigint comment 'member_id',
-   create_time          datetime comment 'create_time',
-   change_count         int comment '±ä»¯µÄÖµ',
-   note                 varchar(255) comment '±¸×¢',
-   source_tyoe          tinyint comment 'À´Ô´[0->¹ºÎï£»1->¹ÜÀíÔ±ĞŞ¸Ä;2->»î¶¯]',
-   primary key (id)
-);
+    id           bigint auto_increment comment 'id'
+        primary key,
+    member_id    bigint       null comment 'member_id',
+    create_time  datetime     null comment 'create_time',
+    change_count int          null comment 'å˜åŒ–çš„å€¼',
+    note         varchar(255) null comment 'å¤‡æ³¨',
+    source_tyoe  tinyint      null comment 'æ¥æº[0->è´­ç‰©ï¼›1->ç®¡ç†å‘˜ä¿®æ”¹;2->æ´»åŠ¨]'
+)
+    comment 'ç§¯åˆ†å˜åŒ–å†å²è®°å½•';
 
-alter table ums_integration_change_history comment '»ı·Ö±ä»¯ÀúÊ·¼ÇÂ¼';
-
-/*==============================================================*/
-/* Table: ums_member                                            */
-/*==============================================================*/
 create table ums_member
 (
-   id                   bigint not null auto_increment comment 'id',
-   level_id             bigint comment '»áÔ±µÈ¼¶id',
-   username             char(64) comment 'ÓÃ»§Ãû',
-   password             varchar(64) comment 'ÃÜÂë',
-   nickname             varchar(64) comment 'êÇ³Æ',
-   mobile               varchar(20) comment 'ÊÖ»úºÅÂë',
-   email                varchar(64) comment 'ÓÊÏä',
-   header               varchar(500) comment 'Í·Ïñ',
-   gender               tinyint comment 'ĞÔ±ğ',
-   birth                date comment 'ÉúÈÕ',
-   city                 varchar(500) comment 'ËùÔÚ³ÇÊĞ',
-   job                  varchar(255) comment 'Ö°Òµ',
-   sign                 varchar(255) comment '¸öĞÔÇ©Ãû',
-   source_type          tinyint comment 'ÓÃ»§À´Ô´',
-   integration          int comment '»ı·Ö',
-   growth               int comment '³É³¤Öµ',
-   status               tinyint comment 'ÆôÓÃ×´Ì¬',
-   create_time          datetime comment '×¢²áÊ±¼ä',
-   primary key (id)
-);
+    id           bigint auto_increment comment 'id'
+        primary key,
+    level_id     bigint       null comment 'ä¼šå‘˜ç­‰çº§id',
+    username     char(64)     null comment 'ç”¨æˆ·å',
+    password     varchar(64)  null comment 'å¯†ç ',
+    nickname     varchar(64)  null comment 'æ˜µç§°',
+    mobile       varchar(20)  null comment 'æ‰‹æœºå·ç ',
+    email        varchar(64)  null comment 'é‚®ç®±',
+    header       varchar(500) null comment 'å¤´åƒ',
+    gender       tinyint      null comment 'æ€§åˆ«',
+    birth        date         null comment 'ç”Ÿæ—¥',
+    city         varchar(500) null comment 'æ‰€åœ¨åŸå¸‚',
+    job          varchar(255) null comment 'èŒä¸š',
+    sign         varchar(255) null comment 'ä¸ªæ€§ç­¾å',
+    source_type  tinyint      null comment 'ç”¨æˆ·æ¥æº',
+    integration  int          null comment 'ç§¯åˆ†',
+    growth       int          null comment 'æˆé•¿å€¼',
+    status       tinyint      null comment 'å¯ç”¨çŠ¶æ€',
+    create_time  datetime     null comment 'æ³¨å†Œæ—¶é—´',
+    social_uid   varchar(255) null comment 'ç¤¾äº¤ç½‘ç«™çš„ç”¨æˆ·ID',
+    access_token varchar(255) null comment 'ç¤¾äº¤ç½‘ç«™è®¿é—®æ•°æ®çš„ä»¤ç‰Œ',
+    expires_in   varchar(255) null comment 'ç¤¾ç½‘ç«™ä»¤ç‰Œçš„è¿‡æœŸæ—¶é—´'
+)
+    comment 'ä¼šå‘˜';
 
-alter table ums_member comment '»áÔ±';
-
-/*==============================================================*/
-/* Table: ums_member_collect_spu                                */
-/*==============================================================*/
 create table ums_member_collect_spu
 (
-   id                   bigint not null comment 'id',
-   member_id            bigint comment '»áÔ±id',
-   spu_id               bigint comment 'spu_id',
-   spu_name             varchar(500) comment 'spu_name',
-   spu_img              varchar(500) comment 'spu_img',
-   create_time          datetime comment 'create_time',
-   primary key (id)
-);
+    id          bigint       not null comment 'id'
+        primary key,
+    member_id   bigint       null comment 'ä¼šå‘˜id',
+    spu_id      bigint       null comment 'spu_id',
+    spu_name    varchar(500) null comment 'spu_name',
+    spu_img     varchar(500) null comment 'spu_img',
+    create_time datetime     null comment 'create_time'
+)
+    comment 'ä¼šå‘˜æ”¶è—çš„å•†å“';
 
-alter table ums_member_collect_spu comment '»áÔ±ÊÕ²ØµÄÉÌÆ·';
-
-/*==============================================================*/
-/* Table: ums_member_collect_subject                            */
-/*==============================================================*/
 create table ums_member_collect_subject
 (
-   id                   bigint not null auto_increment comment 'id',
-   subject_id           bigint comment 'subject_id',
-   subject_name         varchar(255) comment 'subject_name',
-   subject_img          varchar(500) comment 'subject_img',
-   subject_urll         varchar(500) comment '»î¶¯url',
-   primary key (id)
-);
+    id           bigint auto_increment comment 'id'
+        primary key,
+    subject_id   bigint       null comment 'subject_id',
+    subject_name varchar(255) null comment 'subject_name',
+    subject_img  varchar(500) null comment 'subject_img',
+    subject_urll varchar(500) null comment 'æ´»åŠ¨url'
+)
+    comment 'ä¼šå‘˜æ”¶è—çš„ä¸“é¢˜æ´»åŠ¨';
 
-alter table ums_member_collect_subject comment '»áÔ±ÊÕ²ØµÄ×¨Ìâ»î¶¯';
-
-/*==============================================================*/
-/* Table: ums_member_level                                      */
-/*==============================================================*/
 create table ums_member_level
 (
-   id                   bigint not null auto_increment comment 'id',
-   name                 varchar(100) comment 'µÈ¼¶Ãû³Æ',
-   growth_point         int comment 'µÈ¼¶ĞèÒªµÄ³É³¤Öµ',
-   default_status       tinyint comment 'ÊÇ·ñÎªÄ¬ÈÏµÈ¼¶[0->²»ÊÇ£»1->ÊÇ]',
-   free_freight_point   decimal(18,4) comment 'ÃâÔË·Ñ±ê×¼',
-   comment_growth_point int comment 'Ã¿´ÎÆÀ¼Û»ñÈ¡µÄ³É³¤Öµ',
-   priviledge_free_freight tinyint comment 'ÊÇ·ñÓĞÃâÓÊÌØÈ¨',
-   priviledge_member_price tinyint comment 'ÊÇ·ñÓĞ»áÔ±¼Û¸ñÌØÈ¨',
-   priviledge_birthday  tinyint comment 'ÊÇ·ñÓĞÉúÈÕÌØÈ¨',
-   note                 varchar(255) comment '±¸×¢',
-   primary key (id)
-);
+    id                      bigint auto_increment comment 'id'
+        primary key,
+    name                    varchar(100)   null comment 'ç­‰çº§åç§°',
+    growth_point            int            null comment 'ç­‰çº§éœ€è¦çš„æˆé•¿å€¼',
+    default_status          tinyint        null comment 'æ˜¯å¦ä¸ºé»˜è®¤ç­‰çº§[0->ä¸æ˜¯ï¼›1->æ˜¯]',
+    free_freight_point      decimal(18, 4) null comment 'å…è¿è´¹æ ‡å‡†',
+    comment_growth_point    int            null comment 'æ¯æ¬¡è¯„ä»·è·å–çš„æˆé•¿å€¼',
+    priviledge_free_freight tinyint        null comment 'æ˜¯å¦æœ‰å…é‚®ç‰¹æƒ',
+    priviledge_member_price tinyint        null comment 'æ˜¯å¦æœ‰ä¼šå‘˜ä»·æ ¼ç‰¹æƒ',
+    priviledge_birthday     tinyint        null comment 'æ˜¯å¦æœ‰ç”Ÿæ—¥ç‰¹æƒ',
+    note                    varchar(255)   null comment 'å¤‡æ³¨'
+)
+    comment 'ä¼šå‘˜ç­‰çº§';
 
-alter table ums_member_level comment '»áÔ±µÈ¼¶';
-
-/*==============================================================*/
-/* Table: ums_member_login_log                                  */
-/*==============================================================*/
 create table ums_member_login_log
 (
-   id                   bigint not null auto_increment comment 'id',
-   member_id            bigint comment 'member_id',
-   create_time          datetime comment '´´½¨Ê±¼ä',
-   ip                   varchar(64) comment 'ip',
-   city                 varchar(64) comment 'city',
-   login_type           tinyint(1) comment 'µÇÂ¼ÀàĞÍ[1-web£¬2-app]',
-   primary key (id)
-);
+    id          bigint auto_increment comment 'id'
+        primary key,
+    member_id   bigint      null comment 'member_id',
+    create_time datetime    null comment 'åˆ›å»ºæ—¶é—´',
+    ip          varchar(64) null comment 'ip',
+    city        varchar(64) null comment 'city',
+    login_type  tinyint(1)  null comment 'ç™»å½•ç±»å‹[1-webï¼Œ2-app]'
+)
+    comment 'ä¼šå‘˜ç™»å½•è®°å½•';
 
-alter table ums_member_login_log comment '»áÔ±µÇÂ¼¼ÇÂ¼';
-
-/*==============================================================*/
-/* Table: ums_member_receive_address                            */
-/*==============================================================*/
 create table ums_member_receive_address
 (
-   id                   bigint not null auto_increment comment 'id',
-   member_id            bigint comment 'member_id',
-   name                 varchar(255) comment 'ÊÕ»õÈËĞÕÃû',
-   phone                varchar(64) comment 'µç»°',
-   post_code            varchar(64) comment 'ÓÊÕş±àÂë',
-   province             varchar(100) comment 'Ê¡·İ/Ö±Ï½ÊĞ',
-   city                 varchar(100) comment '³ÇÊĞ',
-   region               varchar(100) comment 'Çø',
-   detail_address       varchar(255) comment 'ÏêÏ¸µØÖ·(½ÖµÀ)',
-   areacode             varchar(15) comment 'Ê¡ÊĞÇø´úÂë',
-   default_status       tinyint(1) comment 'ÊÇ·ñÄ¬ÈÏ',
-   primary key (id)
-);
+    id             bigint auto_increment comment 'id'
+        primary key,
+    member_id      bigint       null comment 'member_id',
+    name           varchar(255) null comment 'æ”¶è´§äººå§“å',
+    phone          varchar(64)  null comment 'ç”µè¯',
+    post_code      varchar(64)  null comment 'é‚®æ”¿ç¼–ç ',
+    province       varchar(100) null comment 'çœä»½/ç›´è¾–å¸‚',
+    city           varchar(100) null comment 'åŸå¸‚',
+    region         varchar(100) null comment 'åŒº',
+    detail_address varchar(255) null comment 'è¯¦ç»†åœ°å€(è¡—é“)',
+    areacode       varchar(15)  null comment 'çœå¸‚åŒºä»£ç ',
+    default_status tinyint(1)   null comment 'æ˜¯å¦é»˜è®¤'
+)
+    comment 'ä¼šå‘˜æ”¶è´§åœ°å€';
 
-alter table ums_member_receive_address comment '»áÔ±ÊÕ»õµØÖ·';
-
-/*==============================================================*/
-/* Table: ums_member_statistics_info                            */
-/*==============================================================*/
 create table ums_member_statistics_info
 (
-   id                   bigint not null auto_increment comment 'id',
-   member_id            bigint comment '»áÔ±id',
-   consume_amount       decimal(18,4) comment 'ÀÛ¼ÆÏû·Ñ½ğ¶î',
-   coupon_amount        decimal(18,4) comment 'ÀÛ¼ÆÓÅ»İ½ğ¶î',
-   order_count          int comment '¶©µ¥ÊıÁ¿',
-   coupon_count         int comment 'ÓÅ»İÈ¯ÊıÁ¿',
-   comment_count        int comment 'ÆÀ¼ÛÊı',
-   return_order_count   int comment 'ÍË»õÊıÁ¿',
-   login_count          int comment 'µÇÂ¼´ÎÊı',
-   attend_count         int comment '¹Ø×¢ÊıÁ¿',
-   fans_count           int comment '·ÛË¿ÊıÁ¿',
-   collect_product_count int comment 'ÊÕ²ØµÄÉÌÆ·ÊıÁ¿',
-   collect_subject_count int comment 'ÊÕ²ØµÄ×¨Ìâ»î¶¯ÊıÁ¿',
-   collect_comment_count int comment 'ÊÕ²ØµÄÆÀÂÛÊıÁ¿',
-   invite_friend_count  int comment 'ÑûÇëµÄÅóÓÑÊıÁ¿',
-   primary key (id)
-);
+    id                    bigint auto_increment comment 'id'
+        primary key,
+    member_id             bigint         null comment 'ä¼šå‘˜id',
+    consume_amount        decimal(18, 4) null comment 'ç´¯è®¡æ¶ˆè´¹é‡‘é¢',
+    coupon_amount         decimal(18, 4) null comment 'ç´¯è®¡ä¼˜æƒ é‡‘é¢',
+    order_count           int            null comment 'è®¢å•æ•°é‡',
+    coupon_count          int            null comment 'ä¼˜æƒ åˆ¸æ•°é‡',
+    comment_count         int            null comment 'è¯„ä»·æ•°',
+    return_order_count    int            null comment 'é€€è´§æ•°é‡',
+    login_count           int            null comment 'ç™»å½•æ¬¡æ•°',
+    attend_count          int            null comment 'å…³æ³¨æ•°é‡',
+    fans_count            int            null comment 'ç²‰ä¸æ•°é‡',
+    collect_product_count int            null comment 'æ”¶è—çš„å•†å“æ•°é‡',
+    collect_subject_count int            null comment 'æ”¶è—çš„ä¸“é¢˜æ´»åŠ¨æ•°é‡',
+    collect_comment_count int            null comment 'æ”¶è—çš„è¯„è®ºæ•°é‡',
+    invite_friend_count   int            null comment 'é‚€è¯·çš„æœ‹å‹æ•°é‡'
+)
+    comment 'ä¼šå‘˜ç»Ÿè®¡ä¿¡æ¯';
 
-alter table ums_member_statistics_info comment '»áÔ±Í³¼ÆĞÅÏ¢';
+create table undo_log
+(
+    branch_id     bigint       not null comment 'branch transaction id',
+    xid           varchar(128) not null comment 'global transaction id',
+    context       varchar(128) not null comment 'undo_log context,such as serialization',
+    rollback_info longblob     not null comment 'rollback info',
+    log_status    int          not null comment '0:normal status,1:defense status',
+    log_created   datetime(6)  not null comment 'create datetime',
+    log_modified  datetime(6)  not null comment 'modify datetime',
+    constraint ux_undo_log
+        unique (xid, branch_id)
+)
+    comment 'AT transaction mode undo table';
+
+create index ix_log_created
+    on undo_log (log_created);
+

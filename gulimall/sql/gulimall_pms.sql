@@ -1,284 +1,210 @@
-drop table if exists pms_attr;
-
-drop table if exists pms_attr_attrgroup_relation;
-
-drop table if exists pms_attr_group;
-
-drop table if exists pms_brand;
-
-drop table if exists pms_category;
-
-drop table if exists pms_category_brand_relation;
-
-drop table if exists pms_comment_replay;
-
-drop table if exists pms_product_attr_value;
-
-drop table if exists pms_sku_images;
-
-drop table if exists pms_sku_info;
-
-drop table if exists pms_sku_sale_attr_value;
-
-drop table if exists pms_spu_comment;
-
-drop table if exists pms_spu_images;
-
-drop table if exists pms_spu_info;
-
-drop table if exists pms_spu_info_desc;
-
-/*==============================================================*/
-/* Table: pms_attr                                              */
-/*==============================================================*/
 create table pms_attr
 (
-   attr_id              bigint not null auto_increment comment 'ÊôĞÔid',
-   attr_name            char(30) comment 'ÊôĞÔÃû',
-   search_type          tinyint comment 'ÊÇ·ñĞèÒª¼ìË÷[0-²»ĞèÒª£¬1-ĞèÒª]',
-   icon                 varchar(255) comment 'ÊôĞÔÍ¼±ê',
-   value_select         char(255) comment '¿ÉÑ¡ÖµÁĞ±í[ÓÃ¶ººÅ·Ö¸ô]',
-   attr_type            tinyint comment 'ÊôĞÔÀàĞÍ[0-ÏúÊÛÊôĞÔ£¬1-»ù±¾ÊôĞÔ£¬2-¼ÈÊÇÏúÊÛÊôĞÔÓÖÊÇ»ù±¾ÊôĞÔ]',
-   enable               bigint comment 'ÆôÓÃ×´Ì¬[0 - ½ûÓÃ£¬1 - ÆôÓÃ]',
-   catelog_id           bigint comment 'ËùÊô·ÖÀà',
-   show_desc            tinyint comment '¿ìËÙÕ¹Ê¾¡¾ÊÇ·ñÕ¹Ê¾ÔÚ½éÉÜÉÏ£»0-·ñ 1-ÊÇ¡¿£¬ÔÚskuÖĞÈÔÈ»¿ÉÒÔµ÷Õû',
-   primary key (attr_id)
-);
+    attr_id      bigint auto_increment comment 'å±æ€§id'
+        primary key,
+    attr_name    char(30)          null comment 'å±æ€§å',
+    search_type  tinyint           null comment 'æ˜¯å¦éœ€è¦æ£€ç´¢[0-ä¸éœ€è¦ï¼Œ1-éœ€è¦]',
+    icon         varchar(255)      null comment 'å±æ€§å›¾æ ‡',
+    value_select char(255)         null comment 'å¯é€‰å€¼åˆ—è¡¨[ç”¨é€—å·åˆ†éš”]',
+    attr_type    tinyint           null comment 'å±æ€§ç±»å‹[0-é”€å”®å±æ€§ï¼Œ1-åŸºæœ¬å±æ€§]',
+    enable       bigint            null comment 'å¯ç”¨çŠ¶æ€[0 - ç¦ç”¨ï¼Œ1 - å¯ç”¨]',
+    catelog_id   bigint            null comment 'æ‰€å±åˆ†ç±»',
+    show_desc    tinyint           null comment 'å¿«é€Ÿå±•ç¤ºã€æ˜¯å¦å±•ç¤ºåœ¨ä»‹ç»ä¸Šï¼›0-å¦ 1-æ˜¯ã€‘ï¼Œåœ¨skuä¸­ä»ç„¶å¯ä»¥è°ƒæ•´',
+    value_type   tinyint default 0 null comment 'å€¼ç±»å‹[0-ä¸ºå•ä¸ªå€¼ï¼Œ1-å¯ä»¥é€‰æ‹©å¤šä¸ªå€¼]'
+)
+    comment 'å•†å“å±æ€§';
 
-alter table pms_attr comment 'ÉÌÆ·ÊôĞÔ';
-
-/*==============================================================*/
-/* Table: pms_attr_attrgroup_relation                           */
-/*==============================================================*/
 create table pms_attr_attrgroup_relation
 (
-   id                   bigint not null auto_increment comment 'id',
-   attr_id              bigint comment 'ÊôĞÔid',
-   attr_group_id        bigint comment 'ÊôĞÔ·Ö×éid',
-   attr_sort            int comment 'ÊôĞÔ×éÄÚÅÅĞò',
-   primary key (id)
-);
+    id            bigint auto_increment comment 'id'
+        primary key,
+    attr_id       bigint null comment 'å±æ€§id',
+    attr_group_id bigint null comment 'å±æ€§åˆ†ç»„id',
+    attr_sort     int    null comment 'å±æ€§ç»„å†…æ’åº'
+)
+    comment 'å±æ€§&å±æ€§åˆ†ç»„å…³è”';
 
-alter table pms_attr_attrgroup_relation comment 'ÊôĞÔ&ÊôĞÔ·Ö×é¹ØÁª';
-
-/*==============================================================*/
-/* Table: pms_attr_group                                        */
-/*==============================================================*/
 create table pms_attr_group
 (
-   attr_group_id        bigint not null auto_increment comment '·Ö×éid',
-   attr_group_name      char(20) comment '×éÃû',
-   sort                 int comment 'ÅÅĞò',
-   descript             varchar(255) comment 'ÃèÊö',
-   icon                 varchar(255) comment '×éÍ¼±ê',
-   catelog_id           bigint comment 'ËùÊô·ÖÀàid',
-   primary key (attr_group_id)
-);
+    attr_group_id   bigint auto_increment comment 'åˆ†ç»„id'
+        primary key,
+    attr_group_name char(20)     null comment 'ç»„å',
+    sort            int          null comment 'æ’åº',
+    descript        varchar(255) null comment 'æè¿°',
+    icon            varchar(255) null comment 'ç»„å›¾æ ‡',
+    catelog_id      bigint       null comment 'æ‰€å±åˆ†ç±»id'
+)
+    comment 'å±æ€§åˆ†ç»„';
 
-alter table pms_attr_group comment 'ÊôĞÔ·Ö×é';
-
-/*==============================================================*/
-/* Table: pms_brand                                             */
-/*==============================================================*/
 create table pms_brand
 (
-   brand_id             bigint not null auto_increment comment 'Æ·ÅÆid',
-   name                 char(50) comment 'Æ·ÅÆÃû',
-   logo                 varchar(2000) comment 'Æ·ÅÆlogoµØÖ·',
-   descript             longtext comment '½éÉÜ',
-   show_status          tinyint comment 'ÏÔÊ¾×´Ì¬[0-²»ÏÔÊ¾£»1-ÏÔÊ¾]',
-   first_letter         char(1) comment '¼ìË÷Ê××ÖÄ¸',
-   sort                 int comment 'ÅÅĞò',
-   primary key (brand_id)
-);
+    brand_id     bigint auto_increment comment 'å“ç‰Œid'
+        primary key,
+    name         char(50)      null comment 'å“ç‰Œå',
+    logo         varchar(2000) null comment 'å“ç‰Œlogoåœ°å€',
+    descript     longtext      null comment 'ä»‹ç»',
+    show_status  tinyint       null comment 'æ˜¾ç¤ºçŠ¶æ€[0-ä¸æ˜¾ç¤ºï¼›1-æ˜¾ç¤º]',
+    first_letter char          null comment 'æ£€ç´¢é¦–å­—æ¯',
+    sort         int           null comment 'æ’åº'
+)
+    comment 'å“ç‰Œ';
 
-alter table pms_brand comment 'Æ·ÅÆ';
-
-/*==============================================================*/
-/* Table: pms_category                                          */
-/*==============================================================*/
 create table pms_category
 (
-   cat_id               bigint not null auto_increment comment '·ÖÀàid',
-   name                 char(50) comment '·ÖÀàÃû³Æ',
-   parent_cid           bigint comment '¸¸·ÖÀàid',
-   cat_level            int comment '²ã¼¶',
-   show_status          tinyint comment 'ÊÇ·ñÏÔÊ¾[0-²»ÏÔÊ¾£¬1ÏÔÊ¾]',
-   sort                 int comment 'ÅÅĞò',
-   icon                 char(255) comment 'Í¼±êµØÖ·',
-   product_unit         char(50) comment '¼ÆÁ¿µ¥Î»',
-   product_count        int comment 'ÉÌÆ·ÊıÁ¿',
-   primary key (cat_id)
-);
+    cat_id        bigint auto_increment comment 'åˆ†ç±»id'
+        primary key,
+    name          char(50)  null comment 'åˆ†ç±»åç§°',
+    parent_cid    bigint    null comment 'çˆ¶åˆ†ç±»id',
+    cat_level     int       null comment 'å±‚çº§',
+    show_status   tinyint   null comment 'æ˜¯å¦æ˜¾ç¤º[0-ä¸æ˜¾ç¤ºï¼Œ1æ˜¾ç¤º]',
+    sort          int       null comment 'æ’åº',
+    icon          char(255) null comment 'å›¾æ ‡åœ°å€',
+    product_unit  char(50)  null comment 'è®¡é‡å•ä½',
+    product_count int       null comment 'å•†å“æ•°é‡'
+)
+    comment 'å•†å“ä¸‰çº§åˆ†ç±»';
 
-alter table pms_category comment 'ÉÌÆ·Èı¼¶·ÖÀà';
-
-/*==============================================================*/
-/* Table: pms_category_brand_relation                           */
-/*==============================================================*/
 create table pms_category_brand_relation
 (
-   id                   bigint not null auto_increment,
-   brand_id             bigint comment 'Æ·ÅÆid',
-   catelog_id           bigint comment '·ÖÀàid',
-   brand_name           varchar(255),
-   catelog_name         varchar(255),
-   primary key (id)
-);
+    id           bigint auto_increment
+        primary key,
+    brand_id     bigint       null comment 'å“ç‰Œid',
+    catelog_id   bigint       null comment 'åˆ†ç±»id',
+    brand_name   varchar(255) null,
+    catelog_name varchar(255) null
+)
+    comment 'å“ç‰Œåˆ†ç±»å…³è”';
 
-alter table pms_category_brand_relation comment 'Æ·ÅÆ·ÖÀà¹ØÁª';
-
-/*==============================================================*/
-/* Table: pms_comment_replay                                    */
-/*==============================================================*/
 create table pms_comment_replay
 (
-   id                   bigint not null auto_increment comment 'id',
-   comment_id           bigint comment 'ÆÀÂÛid',
-   reply_id             bigint comment '»Ø¸´id',
-   primary key (id)
-);
+    id         bigint auto_increment comment 'id'
+        primary key,
+    comment_id bigint null comment 'è¯„è®ºid',
+    reply_id   bigint null comment 'å›å¤id'
+)
+    comment 'å•†å“è¯„ä»·å›å¤å…³ç³»';
 
-alter table pms_comment_replay comment 'ÉÌÆ·ÆÀ¼Û»Ø¸´¹ØÏµ';
-
-/*==============================================================*/
-/* Table: pms_product_attr_value                                */
-/*==============================================================*/
 create table pms_product_attr_value
 (
-   id                   bigint not null auto_increment comment 'id',
-   spu_id               bigint comment 'ÉÌÆ·id',
-   attr_id              bigint comment 'ÊôĞÔid',
-   attr_name            varchar(200) comment 'ÊôĞÔÃû',
-   attr_value           varchar(200) comment 'ÊôĞÔÖµ',
-   attr_sort            int comment 'Ë³Ğò',
-   quick_show           tinyint comment '¿ìËÙÕ¹Ê¾¡¾ÊÇ·ñÕ¹Ê¾ÔÚ½éÉÜÉÏ£»0-·ñ 1-ÊÇ¡¿',
-   primary key (id)
-);
+    id         bigint auto_increment comment 'id'
+        primary key,
+    spu_id     bigint       null comment 'å•†å“id',
+    attr_id    bigint       null comment 'å±æ€§id',
+    attr_name  varchar(200) null comment 'å±æ€§å',
+    attr_value varchar(200) null comment 'å±æ€§å€¼',
+    attr_sort  int          null comment 'é¡ºåº',
+    quick_show tinyint      null comment 'å¿«é€Ÿå±•ç¤ºã€æ˜¯å¦å±•ç¤ºåœ¨ä»‹ç»ä¸Šï¼›0-å¦ 1-æ˜¯ã€‘'
+)
+    comment 'spuå±æ€§å€¼';
 
-alter table pms_product_attr_value comment 'spuÊôĞÔÖµ';
-
-/*==============================================================*/
-/* Table: pms_sku_images                                        */
-/*==============================================================*/
 create table pms_sku_images
 (
-   id                   bigint not null auto_increment comment 'id',
-   sku_id               bigint comment 'sku_id',
-   img_url              varchar(255) comment 'Í¼Æ¬µØÖ·',
-   img_sort             int comment 'ÅÅĞò',
-   default_img          int comment 'Ä¬ÈÏÍ¼[0 - ²»ÊÇÄ¬ÈÏÍ¼£¬1 - ÊÇÄ¬ÈÏÍ¼]',
-   primary key (id)
-);
+    id          bigint auto_increment comment 'id'
+        primary key,
+    sku_id      bigint       null comment 'sku_id',
+    img_url     varchar(255) null comment 'å›¾ç‰‡åœ°å€',
+    img_sort    int          null comment 'æ’åº',
+    default_img int          null comment 'é»˜è®¤å›¾[0 - ä¸æ˜¯é»˜è®¤å›¾ï¼Œ1 - æ˜¯é»˜è®¤å›¾]'
+)
+    comment 'skuå›¾ç‰‡';
 
-alter table pms_sku_images comment 'skuÍ¼Æ¬';
-
-/*==============================================================*/
-/* Table: pms_sku_info                                          */
-/*==============================================================*/
 create table pms_sku_info
 (
-   sku_id               bigint not null auto_increment comment 'skuId',
-   spu_id               bigint comment 'spuId',
-   sku_name             varchar(255) comment 'skuÃû³Æ',
-   sku_desc             varchar(2000) comment 'sku½éÉÜÃèÊö',
-   catalog_id           bigint comment 'ËùÊô·ÖÀàid',
-   brand_id             bigint comment 'Æ·ÅÆid',
-   sku_default_img      varchar(255) comment 'Ä¬ÈÏÍ¼Æ¬',
-   sku_title            varchar(255) comment '±êÌâ',
-   sku_subtitle         varchar(2000) comment '¸±±êÌâ',
-   price                decimal(18,4) comment '¼Û¸ñ',
-   sale_count           bigint comment 'ÏúÁ¿',
-   primary key (sku_id)
-);
+    sku_id          bigint auto_increment comment 'skuId'
+        primary key,
+    spu_id          bigint         null comment 'spuId',
+    sku_name        varchar(255)   null comment 'skuåç§°',
+    sku_desc        varchar(2000)  null comment 'skuä»‹ç»æè¿°',
+    catalog_id      bigint         null comment 'æ‰€å±åˆ†ç±»id',
+    brand_id        bigint         null comment 'å“ç‰Œid',
+    sku_default_img varchar(255)   null comment 'é»˜è®¤å›¾ç‰‡',
+    sku_title       varchar(255)   null comment 'æ ‡é¢˜',
+    sku_subtitle    varchar(2000)  null comment 'å‰¯æ ‡é¢˜',
+    price           decimal(18, 4) null comment 'ä»·æ ¼',
+    sale_count      bigint         null comment 'é”€é‡'
+)
+    comment 'skuä¿¡æ¯';
 
-alter table pms_sku_info comment 'skuĞÅÏ¢';
-
-/*==============================================================*/
-/* Table: pms_sku_sale_attr_value                               */
-/*==============================================================*/
 create table pms_sku_sale_attr_value
 (
-   id                   bigint not null auto_increment comment 'id',
-   sku_id               bigint comment 'sku_id',
-   attr_id              bigint comment 'attr_id',
-   attr_name            varchar(200) comment 'ÏúÊÛÊôĞÔÃû',
-   attr_value           varchar(200) comment 'ÏúÊÛÊôĞÔÖµ',
-   attr_sort            int comment 'Ë³Ğò',
-   primary key (id)
-);
+    id         bigint auto_increment comment 'id'
+        primary key,
+    sku_id     bigint       null comment 'sku_id',
+    attr_id    bigint       null comment 'attr_id',
+    attr_name  varchar(200) null comment 'é”€å”®å±æ€§å',
+    attr_value varchar(200) null comment 'é”€å”®å±æ€§å€¼',
+    attr_sort  int          null comment 'é¡ºåº'
+)
+    comment 'skué”€å”®å±æ€§&å€¼';
 
-alter table pms_sku_sale_attr_value comment 'skuÏúÊÛÊôĞÔ&Öµ';
-
-/*==============================================================*/
-/* Table: pms_spu_comment                                       */
-/*==============================================================*/
 create table pms_spu_comment
 (
-   id                   bigint not null auto_increment comment 'id',
-   sku_id               bigint comment 'sku_id',
-   spu_id               bigint comment 'spu_id',
-   spu_name             varchar(255) comment 'ÉÌÆ·Ãû×Ö',
-   member_nick_name     varchar(255) comment '»áÔ±êÇ³Æ',
-   star                 tinyint(1) comment 'ĞÇ¼¶',
-   member_ip            varchar(64) comment '»áÔ±ip',
-   create_time          datetime comment '´´½¨Ê±¼ä',
-   show_status          tinyint(1) comment 'ÏÔÊ¾×´Ì¬[0-²»ÏÔÊ¾£¬1-ÏÔÊ¾]',
-   spu_attributes       varchar(255) comment '¹ºÂòÊ±ÊôĞÔ×éºÏ',
-   likes_count          int comment 'µãÔŞÊı',
-   reply_count          int comment '»Ø¸´Êı',
-   resources            varchar(1000) comment 'ÆÀÂÛÍ¼Æ¬/ÊÓÆµ[jsonÊı¾İ£»[{type:ÎÄ¼şÀàĞÍ,url:×ÊÔ´Â·¾¶}]]',
-   content              text comment 'ÄÚÈİ',
-   member_icon          varchar(255) comment 'ÓÃ»§Í·Ïñ',
-   comment_type         tinyint comment 'ÆÀÂÛÀàĞÍ[0 - ¶ÔÉÌÆ·µÄÖ±½ÓÆÀÂÛ£¬1 - ¶ÔÆÀÂÛµÄ»Ø¸´]',
-   primary key (id)
-);
+    id               bigint auto_increment comment 'id'
+        primary key,
+    sku_id           bigint        null comment 'sku_id',
+    spu_id           bigint        null comment 'spu_id',
+    spu_name         varchar(255)  null comment 'å•†å“åå­—',
+    member_nick_name varchar(255)  null comment 'ä¼šå‘˜æ˜µç§°',
+    star             tinyint(1)    null comment 'æ˜Ÿçº§',
+    member_ip        varchar(64)   null comment 'ä¼šå‘˜ip',
+    create_time      datetime      null comment 'åˆ›å»ºæ—¶é—´',
+    show_status      tinyint(1)    null comment 'æ˜¾ç¤ºçŠ¶æ€[0-ä¸æ˜¾ç¤ºï¼Œ1-æ˜¾ç¤º]',
+    spu_attributes   varchar(255)  null comment 'è´­ä¹°æ—¶å±æ€§ç»„åˆ',
+    likes_count      int           null comment 'ç‚¹èµæ•°',
+    reply_count      int           null comment 'å›å¤æ•°',
+    resources        varchar(1000) null comment 'è¯„è®ºå›¾ç‰‡/è§†é¢‘[jsonæ•°æ®ï¼›[{type:æ–‡ä»¶ç±»å‹,url:èµ„æºè·¯å¾„}]]',
+    content          text          null comment 'å†…å®¹',
+    member_icon      varchar(255)  null comment 'ç”¨æˆ·å¤´åƒ',
+    comment_type     tinyint       null comment 'è¯„è®ºç±»å‹[0 - å¯¹å•†å“çš„ç›´æ¥è¯„è®ºï¼Œ1 - å¯¹è¯„è®ºçš„å›å¤]'
+)
+    comment 'å•†å“è¯„ä»·';
 
-alter table pms_spu_comment comment 'ÉÌÆ·ÆÀ¼Û';
-
-/*==============================================================*/
-/* Table: pms_spu_images                                        */
-/*==============================================================*/
 create table pms_spu_images
 (
-   id                   bigint not null auto_increment comment 'id',
-   spu_id               bigint comment 'spu_id',
-   img_name             varchar(200) comment 'Í¼Æ¬Ãû',
-   img_url              varchar(255) comment 'Í¼Æ¬µØÖ·',
-   img_sort             int comment 'Ë³Ğò',
-   default_img          tinyint comment 'ÊÇ·ñÄ¬ÈÏÍ¼',
-   primary key (id)
-);
+    id          bigint auto_increment comment 'id'
+        primary key,
+    spu_id      bigint       null comment 'spu_id',
+    img_name    varchar(200) null comment 'å›¾ç‰‡å',
+    img_url     varchar(255) null comment 'å›¾ç‰‡åœ°å€',
+    img_sort    int          null comment 'é¡ºåº',
+    default_img tinyint      null comment 'æ˜¯å¦é»˜è®¤å›¾'
+)
+    comment 'spuå›¾ç‰‡';
 
-alter table pms_spu_images comment 'spuÍ¼Æ¬';
-
-/*==============================================================*/
-/* Table: pms_spu_info                                          */
-/*==============================================================*/
 create table pms_spu_info
 (
-   id                   bigint not null auto_increment comment 'ÉÌÆ·id',
-   spu_name             varchar(200) comment 'ÉÌÆ·Ãû³Æ',
-   spu_description      varchar(1000) comment 'ÉÌÆ·ÃèÊö',
-   catalog_id           bigint comment 'ËùÊô·ÖÀàid',
-   brand_id             bigint comment 'Æ·ÅÆid',
-   weight               decimal(18,4),
-   publish_status       tinyint comment 'ÉÏ¼Ü×´Ì¬[0 - ÏÂ¼Ü£¬1 - ÉÏ¼Ü]',
-   create_time          datetime,
-   update_time          datetime,
-   primary key (id)
-);
+    id              bigint auto_increment comment 'å•†å“id'
+        primary key,
+    spu_name        varchar(200)   null comment 'å•†å“åç§°',
+    spu_description varchar(1000)  null comment 'å•†å“æè¿°',
+    catalog_id      bigint         null comment 'æ‰€å±åˆ†ç±»id',
+    brand_id        bigint         null comment 'å“ç‰Œid',
+    weight          decimal(18, 4) null,
+    publish_status  tinyint        null comment 'ä¸Šæ¶çŠ¶æ€[0 - ä¸‹æ¶ï¼Œ1 - ä¸Šæ¶]',
+    create_time     datetime       null,
+    update_time     datetime       null
+)
+    comment 'spuä¿¡æ¯';
 
-alter table pms_spu_info comment 'spuĞÅÏ¢';
-
-/*==============================================================*/
-/* Table: pms_spu_info_desc                                     */
-/*==============================================================*/
 create table pms_spu_info_desc
 (
-   spu_id               bigint not null comment 'ÉÌÆ·id',
-   decript              longtext comment 'ÉÌÆ·½éÉÜ',
-   primary key (spu_id)
-);
+    spu_id  bigint   not null comment 'å•†å“id'
+        primary key,
+    decript longtext null comment 'å•†å“ä»‹ç»'
+)
+    comment 'spuä¿¡æ¯ä»‹ç»';
 
-alter table pms_spu_info_desc comment 'spuĞÅÏ¢½éÉÜ';
+create table undo_log
+(
+    branch_id     bigint       not null comment 'branch transaction id',
+    xid           varchar(128) not null comment 'global transaction id',
+    context       varchar(128) not null comment 'undo_log context,such as serialization',
+    rollback_info longblob     not null comment 'rollback info',
+    log_status    int          not null comment '0:normal status,1:defense status',
+    log_created   datetime(6)  not null comment 'create datetime',
+    log_modified  datetime(6)  not null comment 'modify datetime',
+    constraint ux_undo_log
+        unique (xid, branch_id)
+)
+    comment 'AT transaction mode undo table';
+
